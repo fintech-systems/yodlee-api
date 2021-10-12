@@ -1,5 +1,7 @@
-#Yodlee PHP API
-#==============
+# Yodlee PHP API
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/fintech-systems/yodlee-php-api) ![GitHub](https://img.shields.io/github/license/fintech-systems/yodlee-php-api)
+
+# ==============
 
 ** THIS IS PROTOTYPE AND ALPHA SOFTWARE ** BE CAREFULL **
 
@@ -133,3 +135,6 @@ Yodlee apiGet endpoint: https://stage.api.yodlee.uk/ysl/accounts
 Where encountered
 
 After a long time using Bankystatement on local, running art yodlee:get-accounts first didn't have the right API key and now apparently it's not like the JWT token# yodlee-php-api
+
+# yodlee-php-api
+
