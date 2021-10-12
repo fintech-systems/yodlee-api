@@ -2,301 +2,301 @@
 
 namespace FintechSystems\YodleeApi;
 
-use Carbon\Carbon;
-use App\Models\User;
-use Firebase\JWT\JWT;
 use App\Models\Account;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
+use App\Models\User;
+use Carbon\Carbon;
 use Facades\App\Services\AccountService;
 use FintechSystems\YodleeApi\Contracts\BankingProvider;
+use Firebase\JWT\JWT;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class YodleeApi implements BankingProvider
 {
-	public $storagePath       = '/yodlee/';
+    public $storagePath = '/yodlee/';
 
-	private $privateKeyFilename = 'private.pem';
+    private $privateKeyFilename = 'private.pem';
 
-	private $api_url;
+    private $api_url;
 
-	public function __construct(array $client)
-	{
-		$this->api_url = $client['api_url'];
-		$this->api_key = $client['api_key'];
-	}
+    public function __construct(array $client)
+    {
+        $this->api_url = $client['api_url'];
+        $this->api_key = $client['api_key'];
+    }
 
-	public function apiGet($endpoint)
-	{
-		ray("Yodlee apiGet endpoint: " . $this->api_url . $endpoint);
+    public function apiGet($endpoint)
+    {
+        ray('Yodlee apiGet endpoint: '.$this->api_url.$endpoint);
 
-		$token = $this->generateJwtToken();
+        $token = $this->generateJwtToken();
 
-		$curl = curl_init();
+        $curl = curl_init();
 
-		curl_setopt_array($curl, array(
-			CURLOPT_URL => $this->api_url . '/' . $endpoint,
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_ENCODING => '',
-			CURLOPT_MAXREDIRS => 10,
-			CURLOPT_TIMEOUT => 0,
-			CURLOPT_FOLLOWLOCATION => true,
-			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-			CURLOPT_CUSTOMREQUEST => 'GET',
-			CURLOPT_HTTPHEADER => array(
-				'Api-Version: 1.1',
-				'Authorization: Bearer ' . $token,
-				'Cobrand-Name: xxx', // REDACTED
-				'Content-Type: application/json'
-			),
-		));
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $this->api_url.'/'.$endpoint,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => [
+                'Api-Version: 1.1',
+                'Authorization: Bearer '.$token,
+                'Cobrand-Name: xxx', // REDACTED
+                'Content-Type: application/json',
+            ],
+        ]);
 
-		$response = curl_exec($curl);
+        $response = curl_exec($curl);
 
-		ray($response);
+        ray($response);
 
-		curl_close($curl);
+        curl_close($curl);
 
-		return $response;
-	}
+        return $response;
+    }
 
-	public function generateApiKey($url, $cobrandArray, $publicKey)
-	{
-		$curl = curl_init();
+    public function generateApiKey($url, $cobrandArray, $publicKey)
+    {
+        $curl = curl_init();
 
-		$publicKey = preg_replace('/\n/', '', $publicKey);
+        $publicKey = preg_replace('/\n/', '', $publicKey);
 
-		curl_setopt_array($curl, array(
-			CURLOPT_URL => $url,
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_ENCODING => '',
-			CURLOPT_MAXREDIRS => 10,
-			CURLOPT_TIMEOUT => 0,
-			CURLOPT_FOLLOWLOCATION => true,
-			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-			CURLOPT_CUSTOMREQUEST => 'POST',
-			CURLOPT_POSTFIELDS => '{
-        		"publicKey": "' . $publicKey . '"
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => '{
+        		"publicKey": "'.$publicKey.'"
   			}',
-			CURLOPT_HTTPHEADER => [
-				'Api-Version: 1.1',
-				'Authorization: cobSession=' . $cobrandArray['cobSession'],
-				'Cobrand-Name: ' . $cobrandArray['cobrandName'],
-				'Content-Type: application/json'
-			],
-		));
+            CURLOPT_HTTPHEADER => [
+                'Api-Version: 1.1',
+                'Authorization: cobSession='.$cobrandArray['cobSession'],
+                'Cobrand-Name: '.$cobrandArray['cobrandName'],
+                'Content-Type: application/json',
+            ],
+        ]);
 
-		$response = curl_exec($curl);
+        $response = curl_exec($curl);
 
-		curl_close($curl);
+        curl_close($curl);
 
-		$object = json_decode($response);
+        $object = json_decode($response);
 
-		// If a key doesn't exist after the API call, then just return the response which should contain the error
-		return ($object->apiKey['0']->key ?? $response);
-	}
+        // If a key doesn't exist after the API call, then just return the response which should contain the error
+        return $object->apiKey['0']->key ?? $response;
+    }
 
-	/**
-	 * Generate a JWT token from the private key. Used in most requests.
-	 */
-	public function generateJwtToken()
-	{
-		$api_key    = $_ENV['YODLEE_API_KEY'];
+    /**
+     * Generate a JWT token from the private key. Used in most requests.
+     */
+    public function generateJwtToken()
+    {
+        $api_key = $_ENV['YODLEE_API_KEY'];
 
-		$username   = $_ENV['YODLEE_USERNAME'];
+        $username = $_ENV['YODLEE_USERNAME'];
 
-		$privateKey = file_get_contents(__DIR__ . '/../' . $this->privateKeyFilename);
+        $privateKey = file_get_contents(__DIR__.'/../'.$this->privateKeyFilename);
 
-		$payload = [
-			"iss" => $api_key,
-			"iat" => time(),
-			"exp" => time() + 1800,
-			'sub' => $username,
-		];
+        $payload = [
+            'iss' => $api_key,
+            'iat' => time(),
+            'exp' => time() + 1800,
+            'sub' => $username,
+        ];
 
-		return JWT::encode($payload, $privateKey, 'RS512');
-	}
+        return JWT::encode($payload, $privateKey, 'RS512');
+    }
 
-	public function getAccounts()
-	{
-		return json_decode($this->apiGet('accounts'));
-	}
+    public function getAccounts()
+    {
+        return json_decode($this->apiGet('accounts'));
+    }
 
-	public function getApiKeys()
-	{
-		return $this->apiGet('auth/apiKey');
-	}
+    public function getApiKeys()
+    {
+        return $this->apiGet('auth/apiKey');
+    }
 
-	public function getCobSession($url, $cobrandArray)
-	{
-		$curl = curl_init();
+    public function getCobSession($url, $cobrandArray)
+    {
+        $curl = curl_init();
 
-		curl_setopt_array($curl, array(
-			CURLOPT_URL => $url,
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_ENCODING => '',
-			CURLOPT_MAXREDIRS => 10,
-			CURLOPT_TIMEOUT => 0,
-			CURLOPT_FOLLOWLOCATION => true,
-			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-			CURLOPT_CUSTOMREQUEST => 'POST',
-			CURLOPT_POSTFIELDS => '{
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => '{
         		"cobrand":      {
-					"cobrandLogin": "' . $cobrandArray['cobrandLogin'] . '",
-					"cobrandPassword": "' . $cobrandArray['cobrandPassword'] . '"
+					"cobrandLogin": "'.$cobrandArray['cobrandLogin'].'",
+					"cobrandPassword": "'.$cobrandArray['cobrandPassword'].'"
          		}
     		}',
-			CURLOPT_HTTPHEADER => array(
-				'Api-Version: 1.1',
-				'Cobrand-Name: ' . $cobrandArray['cobrandName'],
-				'Content-Type: application/json',
-				'Cookie: JSESSIONID=xxx' // REDACTED TO Research
-			),
-		));
+            CURLOPT_HTTPHEADER => [
+                'Api-Version: 1.1',
+                'Cobrand-Name: '.$cobrandArray['cobrandName'],
+                'Content-Type: application/json',
+                'Cookie: JSESSIONID=xxx', // REDACTED TO Research
+            ],
+        ]);
 
-		$response = curl_exec($curl);
+        $response = curl_exec($curl);
 
-		curl_close($curl);
+        curl_close($curl);
 
-		$object = json_decode($response);
+        $object = json_decode($response);
 
-		ray($object);
+        ray($object);
 
-		return $object->session->cobSession;
-	}
+        return $object->session->cobSession;
+    }
 
-	public function getProviderAccounts()
-	{
-		return $this->apiGet('providerAccounts');
-	}
+    public function getProviderAccounts()
+    {
+        return $this->apiGet('providerAccounts');
+    }
 
-	public function getProviders()
-	{
-		return $this->apiGet('providers');
-	}
+    public function getProviders()
+    {
+        return $this->apiGet('providers');
+    }
 
-	private function getTransactions()
-	{
-		return json_decode($this->apiGet('transactions?fromDate=2020-08-01'));
-	}
+    private function getTransactions()
+    {
+        return json_decode($this->apiGet('transactions?fromDate=2020-08-01'));
+    }
 
-	private function getTransactionsByAccount($accountId, $fromDate = null)
-	{
-		$fromDate == null
-			? $fromDate = Carbon::now()->subDays(90)->format('Y-m-d')
-			: $fromDate = $fromDate;
+    private function getTransactionsByAccount($accountId, $fromDate = null)
+    {
+        $fromDate == null
+            ? $fromDate = Carbon::now()->subDays(90)->format('Y-m-d')
+            : $fromDate = $fromDate;
 
-		return json_decode($this->apiGet("transactions?account_id=$accountId&fromDate=$fromDate"));
-	}
+        return json_decode($this->apiGet("transactions?account_id=$accountId&fromDate=$fromDate"));
+    }
 
-	/**
-	 * Import accounts from Yodlee by reading the local accounts.json file outputted to disk
-	 * Only update fields directly from the Yodlee source, which should 
-	 * exclude the user's assigned name and nickname.
-	 */
-	public function importAccounts()
-	{
-		$json = json_decode(Storage::disk('local')->get($this->storagePath . 'accounts.json'));
+    /**
+     * Import accounts from Yodlee by reading the local accounts.json file outputted to disk
+     * Only update fields directly from the Yodlee source, which should
+     * exclude the user's assigned name and nickname.
+     */
+    public function importAccounts()
+    {
+        $json = json_decode(Storage::disk('local')->get($this->storagePath.'accounts.json'));
 
-		$accounts = $json->account;
+        $accounts = $json->account;
 
-		foreach ($accounts as $account) {
-			Account::updateOrCreate( // TODO Abstract
-				[
-					'yodlee_account_id' => $account->id
-				],
-				[
-					'user_id'             => 3,
-					'container'           => $account->CONTAINER,
-					'provider_account_id' => $account->providerAccountId,
-					'name'                => $account->accountName,
-					'number'              => $account->accountNumber,
-					'balance'             => $account->balance->amount,
-					'available_balance'   => $account->availableBalance->amount ?? null,
-					'current_balance'     => $account->currentBalance->amount ?? null,
-					'currency'            => $account->balance->currency,
-					'provider_id'         => $account->providerId,
-					'provider_name'       => $account->providerName,
-					'type'                => $account->accountType,
-					'display_name'        => $account->displayedName ?? null,
-					'classification'      => $account->classification ?? null,
-					'interest_rate'       => $account->interestRateType ?? null,
-					'yodlee_dataset_name' => $account->dataset[0]->name,
-					'yodlee_updated_at'   => Carbon::parse($account->dataset[0]->lastUpdated)->format('Y-m-d H:i:s'),
-				]
-			);
+        foreach ($accounts as $account) {
+            Account::updateOrCreate( // TODO Abstract
+                [
+                    'yodlee_account_id' => $account->id,
+                ],
+                [
+                    'user_id'             => 3,
+                    'container'           => $account->CONTAINER,
+                    'provider_account_id' => $account->providerAccountId,
+                    'name'                => $account->accountName,
+                    'number'              => $account->accountNumber,
+                    'balance'             => $account->balance->amount,
+                    'available_balance'   => $account->availableBalance->amount ?? null,
+                    'current_balance'     => $account->currentBalance->amount ?? null,
+                    'currency'            => $account->balance->currency,
+                    'provider_id'         => $account->providerId,
+                    'provider_name'       => $account->providerName,
+                    'type'                => $account->accountType,
+                    'display_name'        => $account->displayedName ?? null,
+                    'classification'      => $account->classification ?? null,
+                    'interest_rate'       => $account->interestRateType ?? null,
+                    'yodlee_dataset_name' => $account->dataset[0]->name,
+                    'yodlee_updated_at'   => Carbon::parse($account->dataset[0]->lastUpdated)->format('Y-m-d H:i:s'),
+                ]
+            );
 
-			$message = "Imported $account->CONTAINER account $account->accountName #$account->accountNumber with account balance of {$account->balance->amount} from $account->providerName for tentant 3\n";
+            $message = "Imported $account->CONTAINER account $account->accountName #$account->accountNumber with account balance of {$account->balance->amount} from $account->providerName for tentant 3\n";
 
-			Log::info($message);
-			echo $message;
-			ray($message)->green();
-		}
-	}
+            Log::info($message);
+            echo $message;
+            ray($message)->green();
+        }
+    }
 
-	public function importTransactions($file = null)
-	{
-		$file == null ? $file = 'transactions.json' : $file = $file;
+    public function importTransactions($file = null)
+    {
+        $file == null ? $file = 'transactions.json' : $file = $file;
 
-		$json = json_decode(Storage::disk('local')->get($this->storagePath . $file));
+        $json = json_decode(Storage::disk('local')->get($this->storagePath.$file));
 
-		$transactions = $json->transaction;
+        $transactions = $json->transaction;
 
-		AccountService::import($transactions, 3);	// TODO Abstract
-	}
+        AccountService::import($transactions, 3);	// TODO Abstract
+    }
 
-	public function refreshAccounts()
-	{						
-		$accounts = $this->getAccounts();
+    public function refreshAccounts()
+    {
+        $accounts = $this->getAccounts();
 
-		Storage::put($this->storagePath . 'accounts.json', json_encode($accounts));
+        Storage::put($this->storagePath.'accounts.json', json_encode($accounts));
 
-		$message = "Retrieved " . count($accounts->account) . " accounts";
+        $message = 'Retrieved '.count($accounts->account).' accounts';
 
-		Log::info($message);
+        Log::info($message);
 
-		echo $message;
+        echo $message;
 
-		ray($message)->green();		
-	}
+        ray($message)->green();
+    }
 
-	/**
-	 * Calls the Yodlee API and retrieves transactions for a specific account up to
-	 * 90 days prior. The resultant output is stored on disk where it will
-	 * typically be processed by an import command.
-	 */
-	public function refreshTransactionsByAccount($accountId)
-	{		
-		$userJwtToken = $this->generateJWTToken();		
+    /**
+     * Calls the Yodlee API and retrieves transactions for a specific account up to
+     * 90 days prior. The resultant output is stored on disk where it will
+     * typically be processed by an import command.
+     */
+    public function refreshTransactionsByAccount($accountId)
+    {
+        $userJwtToken = $this->generateJWTToken();
 
-		$transactions = $this->getTransactionsByAccount($userJwtToken, $accountId);
+        $transactions = $this->getTransactionsByAccount($userJwtToken, $accountId);
 
-		Storage::put("$this->storagePath$accountId.json", json_encode($transactions));
+        Storage::put("$this->storagePath$accountId.json", json_encode($transactions));
 
-		$message = "Retrieved " . count($transactions->transaction) . " transactions";
+        $message = 'Retrieved '.count($transactions->transaction).' transactions';
 
-		Log::info($message);
+        Log::info($message);
 
-		echo $message;
+        echo $message;
 
-		ray($message)->green();
-	}
+        ray($message)->green();
+    }
 
-	public function refreshTransactions($fromDate = null)
-	{		
-		$fromDate == null
-			? $fromDate = Carbon::now()->subDays(90)->format('Y-m-d')
-			: $fromDate = $fromDate;
+    public function refreshTransactions($fromDate = null)
+    {
+        $fromDate == null
+            ? $fromDate = Carbon::now()->subDays(90)->format('Y-m-d')
+            : $fromDate = $fromDate;
 
-		$transactions = $this->getTransactions($fromDate);
-		
-		Storage::put($this->storagePath . 'transactions.json', json_encode($transactions));
+        $transactions = $this->getTransactions($fromDate);
 
-		$message = "Retrieved " . count($transactions->transaction) . " transactions";
-	
-		Log::info($message);
+        Storage::put($this->storagePath.'transactions.json', json_encode($transactions));
 
-		echo $message;
+        $message = 'Retrieved '.count($transactions->transaction).' transactions';
 
-		ray($message)->green();
-	}
+        Log::info($message);
+
+        echo $message;
+
+        ray($message)->green();
+    }
 }

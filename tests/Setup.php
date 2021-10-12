@@ -4,18 +4,19 @@ namespace FintechSystems\YodleeApi\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class Setup extends TestCase {
-
-    protected function init() {
-        $dotenv = \Dotenv\Dotenv::createImmutable( __DIR__ . '/../');
+class Setup extends TestCase
+{
+    protected function init()
+    {
+        $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__.'/../');
         $dotenv->load();
     }
 
     /**
-     * Read the Cobrand and API credentials from the environment
+     * Read the Cobrand and API credentials from the environment.
      */
     protected function getClient()
-    {                
+    {
         return [
             'cobrand_name'     => $_ENV['YODLEE_COBRAND_NAME'],
             'cobrand_login'    => $_ENV['YODLEE_COBRAND_LOGIN'],
