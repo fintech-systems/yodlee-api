@@ -21,7 +21,7 @@ class ProviderAccountsCommand extends Command
      */
     protected $description = 'Retrieve a list of Yodlee provider accounts';
 
-    private $cachedFile = 'provider-accounts.json';
+    private $cachedFile = 'provider-accounts.cache.json';
 
     /**
      * Create a new command instance.

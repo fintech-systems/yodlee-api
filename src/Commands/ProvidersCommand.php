@@ -21,7 +21,7 @@ class ProvidersCommand extends Command
      */
     protected $description = 'Retrieve a list of Yodlee providers';
 
-    private $cachedFile = 'providers.json';
+    private $cachedFile = 'providers.cache.json';
 
     /**
      * Create a new command instance.

@@ -1,7 +1,49 @@
 Fintech Systems Yodlee Implementation Library
 =============================================
 
-** THIS IS PROTOTYPE AND BETA SOFTWARE ** BE CAREFULL
+** THIS IS PROTOTYPE AND ALPHA SOFTWARE ** BE CAREFULL **
+
+Laravel Installation
+--------------------
+To publish the config:
+
+```
+php artisan vendor:publish --tag=yodlee-config
+```
+
+Local Development
+-----------------
+Ensure the private key, private.pem, is stored in the root directory of this application.
+
+Note: This is security risk if your .gitignore is not set up correctly. It has to include *.pem
+
+Commands
+========
+
+Numerous Laravel Artisan commands have the ability to cache API requests.
+
+Note: This is a scurity risk if your .gitignore is not setup correctly. It has to include *.cache.json
+
+Display all API keys:
+
+```
+✗ art yodlee:api-key
++-----------------------------------------------+-------------+
+| key                                           | createdDate |
++-----------------------------------------------+-------------+
+| 00000000-00000000-0000-0000-0000-000000000000 | 2021-05-06  |
++-----------------------------------------------+-------------+
+```
+
+Provider Accounts
+-----------------
+
+```
+yodlee:provider-accounts              Retrieve a list of Yodlee provider accounts
+yodlee:providers                      Retrieve a list of Yodlee providers
+```
+
+
 
 First Steps
 -----------
