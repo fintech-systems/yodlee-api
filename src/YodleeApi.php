@@ -103,7 +103,7 @@ class YodleeApi implements BankingProvider
 		$api_key    = $_ENV['YODLEE_API_KEY'];
 
 		$username   = $_ENV['YODLEE_USERNAME'];
-		
+
 		$privateKey = file_get_contents(__DIR__ . '/../' . $this->privateKeyFilename);
 
 		$payload = [
@@ -245,26 +245,18 @@ class YodleeApi implements BankingProvider
 	}
 
 	public function refreshAccounts()
-	{
-		$user = User::whereEmail('xxx')->first(); // REDACTED TODO Abstract
+	{						
+		$accounts = $this->getAccounts();
 
-		$jwtToken = $this->generateJwtToken();
+		Storage::put($this->storagePath . 'accounts.json', json_encode($accounts));
 
-		// $jwtToken = Crypt::generateJWTToken($this->api_key, $user->yodlee_username);
-
-		ray("In Yodlee refreshAccounts(), a jwtToken was generated and it's " . $jwtToken);
-
-		$accounts = $this->getAccounts($jwtToken);
-
-		$message = "Retrieved " . count($accounts->account) . " accounts for $user->email tenant $user->id\n";
+		$message = "Retrieved " . count($accounts->account) . " accounts";
 
 		Log::info($message);
 
 		echo $message;
 
-		ray($message)->green();
-
-		Storage::put($this->storagePath . 'accounts.json', json_encode($accounts));
+		ray($message)->green();		
 	}
 
 	/**
@@ -273,17 +265,14 @@ class YodleeApi implements BankingProvider
 	 * typically be processed by an import command.
 	 */
 	public function refreshTransactionsByAccount($accountId)
-	{
-		$user = User::whereEmail('xxx')->first(); // REDACTED TODO Abstract
-
-		$userJwtToken = $this->generateJWTToken();
-		// $userJwtToken = Crypt::generateJWTToken($this->api_key, $user->yodlee_username);
+	{		
+		$userJwtToken = $this->generateJWTToken();		
 
 		$transactions = $this->getTransactionsByAccount($userJwtToken, $accountId);
 
 		Storage::put("$this->storagePath$accountId.json", json_encode($transactions));
 
-		$message = "Retrieved " . count($transactions->transaction) . " transactions for $user->email tenant $user->id\n";
+		$message = "Retrieved " . count($transactions->transaction) . " transactions";
 
 		Log::info($message);
 
@@ -293,19 +282,17 @@ class YodleeApi implements BankingProvider
 	}
 
 	public function refreshTransactions($fromDate = null)
-	{
-		$user = User::whereEmail('xxx')->first(); // REDACTED TODO Abstract
-
+	{		
 		$fromDate == null
 			? $fromDate = Carbon::now()->subDays(90)->format('Y-m-d')
 			: $fromDate = $fromDate;
 
 		$transactions = $this->getTransactions($fromDate);
-
+		
 		Storage::put($this->storagePath . 'transactions.json', json_encode($transactions));
 
-		$message = "Retrieved " . count($transactions->transaction) . " transactions for $user->email from date $fromDate tenant $user->id\n";
-
+		$message = "Retrieved " . count($transactions->transaction) . " transactions";
+	
 		Log::info($message);
 
 		echo $message;
