@@ -2,18 +2,17 @@
 
 namespace FintechSystems\YodleeApi;
 
-use Illuminate\Support\ServiceProvider;
-
 use FintechSystems\YodleeApi\Commands\ApiKeyCommand;
 use FintechSystems\YodleeApi\Commands\ProviderAccountsCommand;
 use FintechSystems\YodleeApi\Commands\ProvidersCommand;
+use Illuminate\Support\ServiceProvider;
 
 class YodleeApiServiceProvider extends ServiceProvider
 {
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../config/yodlee.php' => config_path('yodlee.php'),
+            __DIR__.'/../config/yodlee.php' => config_path('yodlee.php'),
         ], 'yodlee-config');
 
         if ($this->app->runningInConsole()) {

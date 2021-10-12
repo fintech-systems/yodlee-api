@@ -2,8 +2,8 @@
 
 namespace FintechSystems\YodleeApi\Commands;
 
-use Illuminate\Console\Command;
 use FintechSystems\YodleeApi\Facades\YodleeApi;
+use Illuminate\Console\Command;
 
 class ApiKeyCommand extends Command
 {
@@ -33,17 +33,17 @@ class ApiKeyCommand extends Command
 
     /**
      * Execute the console command.
-     * 
+     *
      * Inspired by https://laravelsecrets.com/
      *
      * @return int
      */
     public function handle()
     {
-        $result = json_decode(YodleeApi::getApiKeys());        
-        
-        $result = collect($result->apiKey);    
-            
+        $result = json_decode(YodleeApi::getApiKeys());
+
+        $result = collect($result->apiKey);
+
         $headers = ['key', 'createdDate'];
 
         $data = $result->map(function ($key) {
@@ -52,7 +52,7 @@ class ApiKeyCommand extends Command
                 'createdDate' => $key->createdDate,
             ];
         });
-        
-        $this->table($headers, $data);                
+
+        $this->table($headers, $data);
     }
 }

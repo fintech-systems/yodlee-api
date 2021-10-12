@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-$jwtToken = "xxx"; // REDACTED
+$jwtToken = 'xxx'; // REDACTED
 
 $fastLinkURL = 'https://ukyinode.stage.yodleedeveloper.uk/authenticate/xxx/?channelAppName=xxx'; // REDACTED
 
@@ -25,8 +25,8 @@ $fastLinkURL = 'https://ukyinode.stage.yodleedeveloper.uk/authenticate/xxx/?chan
 
       fastlinkBtn.addEventListener('click', function() {
         window.fastlink.open({
-          fastLinkURL: '<?php echo $fastLinkURL ;?>',
-          jwtToken: 'Bearer <?php echo $jwtToken ;?> ', 
+          fastLinkURL: '<?php echo $fastLinkURL; ?>',
+          jwtToken: 'Bearer <?php echo $jwtToken; ?> ', 
           params: {
             userExperienceFlow : 'Aggregation'
           },

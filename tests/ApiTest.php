@@ -2,9 +2,8 @@
 
 namespace FintechSystems\Api\Tests;
 
-use FintechSystems\YodleeApi\Crypt;
-use FintechSystems\YodleeApi\YodleeApi;
 use FintechSystems\YodleeApi\Tests\Setup;
+use FintechSystems\YodleeApi\YodleeApi;
 
 class ApiTest extends Setup
 {
@@ -26,9 +25,9 @@ class ApiTest extends Setup
         $this->init();
 
         $client = $this->getClient();
-        
+
         $yodlee = new YodleeApi($client);
-        
+
         $token = $yodlee->generateJWTToken();
 
         ray($token);
@@ -42,7 +41,7 @@ class ApiTest extends Setup
     public function api_keys_can_be_retrieved()
     {
         $this->init();
-        
+
         $client = $this->getClient();
 
         $yodlee = new YodleeApi($client);
@@ -54,28 +53,27 @@ class ApiTest extends Setup
         $this->assertEquals(5, count($result['apiKey']));
     }
 
-    /** 
+    /**
      * @test
-     * 
+     *
      * FYI you cannot generate more than 5 API keys otherwise you get this:
      *    "The maximum number of apiKey permitted is 5"
-     * 
      */
     public function trying_to_generate_a_sixth_key_using_public_key_produces_an_error()
     {
         $this->init();
 
         $client = $this->getClient();
-        
-        $yodlee = new YodleeApi($client);        
 
-        $cobrandArray = array(
-            "cobrandName"     => $client['cobrand_name'],
-            "cobrandLogin"    => $client['cobrand_login'],
-            "cobrandPassword" => $client['cobrand_password']
-        );
+        $yodlee = new YodleeApi($client);
 
-        $loginUrl = $client['api_url'] . 'cobrand/login';
+        $cobrandArray = [
+            'cobrandName'     => $client['cobrand_name'],
+            'cobrandLogin'    => $client['cobrand_login'],
+            'cobrandPassword' => $client['cobrand_password'],
+        ];
+
+        $loginUrl = $client['api_url'].'cobrand/login';
 
         $yodlee = new YodleeApi($client);
 
@@ -84,11 +82,11 @@ class ApiTest extends Setup
             $cobrandArray
         );
 
-        $apiKeyUrl = $client['api_url'] . 'auth/apiKey';
+        $apiKeyUrl = $client['api_url'].'auth/apiKey';
 
         ray($apiKeyUrl);
 
-        $publicKey = file_get_contents("public.pem");
+        $publicKey = file_get_contents('public.pem');
 
         $key = $yodlee->generateAPIKey(
             $apiKeyUrl,
@@ -107,9 +105,9 @@ class ApiTest extends Setup
         $this->init();
 
         $client = $this->getClient();
-        
+
         $yodlee = new YodleeApi($client);
-                
+
         $result = $yodlee->getAccounts();
 
         $this->assertEquals(7, count($result->account));

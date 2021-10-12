@@ -2,8 +2,8 @@
 
 namespace FintechSystems\YodleeApi\Commands;
 
-use Illuminate\Console\Command;
 use FintechSystems\YodleeApi\Facades\YodleeApi;
+use Illuminate\Console\Command;
 
 class ProviderAccountsCommand extends Command
 {
@@ -30,7 +30,7 @@ class ProviderAccountsCommand extends Command
      */
     public function __construct()
     {
-        parent::__construct();        
+        parent::__construct();
     }
 
     /**
@@ -41,15 +41,18 @@ class ProviderAccountsCommand extends Command
     public function handle()
     {
         if ($this->option('cached')) {
-            if (!file_exists($this->cachedFile)) {
+            if (! file_exists($this->cachedFile)) {
                 $this->error("--cached was specified but the file $this->cachedFile does not exist");
+
                 return;
-            }            
+            }
+
             return file_get_contents($this->cachedFile);
         }
 
         $result = file_put_contents($this->cachedFile, YodleeApi::getProviderAccounts());
         $this->info('The command was successful!');
+
         return $result;
     }
 }
