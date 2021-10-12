@@ -1,14 +1,11 @@
 # Yodlee PHP API
 ![GitHub](https://img.shields.io/github/license/fintech-systems/yodlee-php-api)
 
-# ==============
-
-** THIS IS PROTOTYPE AND ALPHA SOFTWARE ** BE CAREFULL **
+*THIS IS PROTOTYPE AND ALPHA SOFTWARE** BE CAREFULL
 
 Installation
 ------------
-`composer require fintech-systems/yodlee-php-api
-
+`composer require fintech-systems/yodlee-php-api`
 
 Laravel Specific Config
 -----------------------
@@ -20,16 +17,28 @@ php artisan vendor:publish --tag=yodlee-config
 
 Local Development
 -----------------
-Ensure the private key, private.pem, is stored in the root directory of this application.
+- Ensure a private key named private.pem is stored in the root directory of the application.
 
-Note: This is security risk if your .gitignore is not set up correctly. It has to include *.pem
+Security Warning
+================
+
+Storing a private key in public source code repository is a huge security risk.
+Ensure the `.gitignore` file contains at least the following:
+
+```
+*.pem
+*.example.json
+*.cache.json
+```
+
+The `*.json` ignores are there because some Laravel Artisan commands have the ability to cache and those files should also be ignored.
 
 Commands
 ========
 
 Numerous Laravel Artisan commands have the ability to cache API requests.
 
-Note: This is a scurity risk if your .gitignore is not setup correctly. It has to include *.cache.json
+Note: This is a security risk if your .gitignore is not setup correctly. See the section `Security Warning`
 
 Display all API keys:
 
@@ -50,42 +59,41 @@ yodlee:provider-accounts              Retrieve a list of Yodlee provider account
 yodlee:providers                      Retrieve a list of Yodlee providers
 ```
 
-
-
 First Steps
 -----------
 You need "/fastlink.php" to set up the link with the bank.
 
-Need help?
-----------
-
-* Think of a search term, e.g. Y023
-https://developer.yodlee.com/search?search_term=Y023
-
 Workflow
 --------
 
-This is a basic overview of all the various security layers and workflow before banking data retrieval:
+This is a basic overview of all the various security layers and workflow before provider data retrieval:
 
-- First log in using cobrand details. This is cobrand_name, cobrand_login, and cobrand_password
--- These credentials are stored in the .env file
+- First log in using the cobrand details. This is cobrand_name, cobrand_login, and cobrand_password
+  - These credentials are stored in the .env file
+
 - Then you create cobrand session
+
 - Then you create an API key in the cobrand session & also crease private key and public key using PHP security libraries included
+
 - Then with the API you can create a JWT token - Yodlees supplies a PHP script where you pass API key and private key and then it happens
 
 - Then with the JWT token;
-- Then register user call user eugene API call user register - using POSTMAN once you have a user
 
-- Then put all parameters, basically API key and private key
+- Then register user call user xyz API call user register - using POSTMAN once you have a user
+
+- Then put all parameters which is the API key and private key
+
 - Put that into sample app
 
-- Type in Username eugene into, clicked go
+- Type in Username xyz into, clicked go
+
 - Then went into Fastlink - a modal popped up
 
 - In Fastlink modal, there was no accounts
+
 - Then clicked linked Account
 
-- Then choose Standard Bank, log in, click link.
+- Then choose A provider's name, log in, click link.
 
 Instructions
 ------------
@@ -104,13 +112,16 @@ Change Log
 - Removed "dd" depenency and added orchestra testbench instead
 - Added *.json to .gitignore
 
-Roadmap
--------
-- A basic Livewire front-end has live data
+Need help?
+----------
+
+* Think of a search term, e.g. Y023
+https://developer.yodlee.com/search?search_term=Y023
 
 Yodlee Error Codes
 ------------------
-Look them up so:
+Look errors up same as above:
+
 https://developer.yodlee.com/search?search_term=Y020
 
 Error Y023
