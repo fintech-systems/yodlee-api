@@ -1,5 +1,5 @@
 # Yodlee PHP API
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/fintech-systems/yodlee-php-api) ![GitHub](https://img.shields.io/github/license/fintech-systems/yodlee-php-api)
+![GitHub](https://img.shields.io/github/license/fintech-systems/yodlee-php-api)
 
 # ==============
 
