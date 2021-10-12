@@ -21,17 +21,19 @@ class ApiTest extends Setup
     }
 
     /** @test */
-    public function it_can_generate_a_jwt_token_from_an_existing_private_key()
+    public function it_can_generate_a_jwt_token()
     {
         $this->init();
 
-        $crypt = new Crypt;
+        $client = $this->getClient();
+        
+        $yodlee = new YodleeApi($client);
+        
+        $token = $yodlee->generateJWTToken();
 
-        $jwtToken = $crypt->generateJWTToken();
+        ray($token);
 
-        ray($jwtToken);
-
-        $this->assertEquals(528, strlen($jwtToken));
+        $this->assertEquals(528, strlen($token));
     }
 
     /**
@@ -40,16 +42,12 @@ class ApiTest extends Setup
     public function api_keys_can_be_retrieved()
     {
         $this->init();
-
-        $crypt = new Crypt;
-
-        $jwtToken = $crypt->generateJWTToken();
-
+        
         $client = $this->getClient();
 
         $yodlee = new YodleeApi($client);
 
-        $result = $yodlee->apiGet($jwtToken, 'auth/apiKey');
+        $result = $yodlee->apiGet('auth/apiKey');
 
         $result = json_decode($result, true); // true turns object to associative array;
 
@@ -63,11 +61,13 @@ class ApiTest extends Setup
      *    "The maximum number of apiKey permitted is 5"
      * 
      */
-    public function trying_to_generate_a_sixth_key_generates_an_error()
+    public function trying_to_generate_a_sixth_key_using_public_key_produces_an_error()
     {
         $this->init();
 
         $client = $this->getClient();
+        
+        $yodlee = new YodleeApi($client);        
 
         $cobrandArray = array(
             "cobrandName"     => $client['cobrand_name'],
@@ -85,6 +85,7 @@ class ApiTest extends Setup
         );
 
         $apiKeyUrl = $client['api_url'] . 'auth/apiKey';
+
         ray($apiKeyUrl);
 
         $publicKey = file_get_contents("public.pem");
@@ -106,16 +107,10 @@ class ApiTest extends Setup
         $this->init();
 
         $client = $this->getClient();
-
-        $crypt = new Crypt;
-
-        $jwtToken = $crypt->generateJWTToken(
-            $client['api_key'],
-            $client['username'],
-        );
-
+        
         $yodlee = new YodleeApi($client);
-        $result = $yodlee->getAccounts($jwtToken);
+                
+        $result = $yodlee->getAccounts();
 
         $this->assertEquals(7, count($result->account));
     }

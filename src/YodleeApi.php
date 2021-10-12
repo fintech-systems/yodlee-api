@@ -18,10 +18,9 @@ class YodleeApi implements BankingProvider
 	private $privateKeyFilename = 'private.pem';
 
 	private $api_url;
-	private $api_key;
 
-	public function __construct(Array $client)
-	{		
+	public function __construct(array $client)
+	{
 		$this->api_url = $client['api_url'];
 		$this->api_key = $client['api_key'];
 	}
@@ -29,9 +28,9 @@ class YodleeApi implements BankingProvider
 	public function apiGet($endpoint)
 	{
 		ray("Yodlee apiGet endpoint: " . $this->api_url . $endpoint);
-		
+
 		$token = $this->generateJwtToken();
-		
+
 		$curl = curl_init();
 
 		curl_setopt_array($curl, array(
@@ -60,23 +59,7 @@ class YodleeApi implements BankingProvider
 		return $response;
 	}
 
-	/**
-	 * Compare the latest import with the data in the system, and if the latest import
-	 * doesn't contain a specific yodlee transaction ID, then mark it as deleted
-	 * in the main dataset.
-	 */
-	private function deletePendingTransactions($accountId)
-	{
-		$file = $accountId . ".json";
-
-		$json = json_decode(Storage::disk('local')->get($this->storagePath . $file));
-
-		$transactions = $json->transaction;
-
-		dd($transactions);
-	}
-
-	public function generateAPIKey($url, $cobrandArray, $publicKey)
+	public function generateApiKey($url, $cobrandArray, $publicKey)
 	{
 		$curl = curl_init();
 
@@ -103,7 +86,7 @@ class YodleeApi implements BankingProvider
 		));
 
 		$response = curl_exec($curl);
-		
+
 		curl_close($curl);
 
 		$object = json_decode($response);
@@ -111,16 +94,18 @@ class YodleeApi implements BankingProvider
 		// If a key doesn't exist after the API call, then just return the response which should contain the error
 		return ($object->apiKey['0']->key ?? $response);
 	}
-	
+
 	/**
-	 * Generate a JWT token from the private key. Used in almost all requests.
+	 * Generate a JWT token from the private key. Used in most requests.
 	 */
 	public function generateJwtToken()
 	{
 		$api_key    = $_ENV['YODLEE_API_KEY'];
+
 		$username   = $_ENV['YODLEE_USERNAME'];
-		$privateKey = file_get_contents(__DIR__ . '/../' . $this->privateKeyFilename);
 		
+		$privateKey = file_get_contents(__DIR__ . '/../' . $this->privateKeyFilename);
+
 		$payload = [
 			"iss" => $api_key,
 			"iat" => time(),
@@ -131,15 +116,16 @@ class YodleeApi implements BankingProvider
 		return JWT::encode($payload, $privateKey, 'RS512');
 	}
 
-	public function getAccounts($jwt_token)
+	public function getAccounts()
 	{
-		return json_decode($this->apiGet($jwt_token, 'accounts'));
+		return json_decode($this->apiGet('accounts'));
 	}
 
-	public function getApiKeys() {		
-		return $this->apiGet('auth/apiKey');	
+	public function getApiKeys()
+	{
+		return $this->apiGet('auth/apiKey');
 	}
-	
+
 	public function getCobSession($url, $cobrandArray)
 	{
 		$curl = curl_init();
@@ -154,16 +140,16 @@ class YodleeApi implements BankingProvider
 			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 			CURLOPT_CUSTOMREQUEST => 'POST',
 			CURLOPT_POSTFIELDS => '{
-        "cobrand":      {
-          "cobrandLogin": "' . $cobrandArray['cobrandLogin'] . '",
-          "cobrandPassword": "' . $cobrandArray['cobrandPassword'] . '"
-         }
-    }',
+        		"cobrand":      {
+					"cobrandLogin": "' . $cobrandArray['cobrandLogin'] . '",
+					"cobrandPassword": "' . $cobrandArray['cobrandPassword'] . '"
+         		}
+    		}',
 			CURLOPT_HTTPHEADER => array(
 				'Api-Version: 1.1',
 				'Cobrand-Name: ' . $cobrandArray['cobrandName'],
 				'Content-Type: application/json',
-				'Cookie: JSESSIONID=xxx' // REDACTED
+				'Cookie: JSESSIONID=xxx' // REDACTED TO Research
 			),
 		));
 
@@ -178,29 +164,34 @@ class YodleeApi implements BankingProvider
 		return $object->session->cobSession;
 	}
 
-	public function getProviderAccounts() {		
+	public function getProviderAccounts()
+	{
 		return $this->apiGet('providerAccounts');
 	}
 
-	public function getProviders() {		
+	public function getProviders()
+	{
 		return $this->apiGet('providers');
 	}
-	
-	private function getTransactions($jwt_token)
+
+	private function getTransactions()
 	{
-		return json_decode($this->apiGet($jwt_token, 'transactions?fromDate=2020-08-01'));
+		return json_decode($this->apiGet('transactions?fromDate=2020-08-01'));
 	}
 
-	private function getTransactionsByAccount($jwt_token, $accountId, $fromDate = null)
+	private function getTransactionsByAccount($accountId, $fromDate = null)
 	{
-		$fromDate == null ? $fromDate = Carbon::now()->subDays(90)->format('Y-m-d') : $fromDate = $fromDate;
-		return json_decode($this->apiGet($jwt_token, "transactions?account_id=$accountId&fromDate=$fromDate"));
+		$fromDate == null
+			? $fromDate = Carbon::now()->subDays(90)->format('Y-m-d')
+			: $fromDate = $fromDate;
+
+		return json_decode($this->apiGet("transactions?account_id=$accountId&fromDate=$fromDate"));
 	}
 
 	/**
 	 * Import accounts from Yodlee by reading the local accounts.json file outputted to disk
-	 * Only update fields directly from the Yodlee source, which should exclude the user's
-	 * assigned name and nickname.
+	 * Only update fields directly from the Yodlee source, which should 
+	 * exclude the user's assigned name and nickname.
 	 */
 	public function importAccounts()
 	{
@@ -209,7 +200,7 @@ class YodleeApi implements BankingProvider
 		$accounts = $json->account;
 
 		foreach ($accounts as $account) {
-			Account::updateOrCreate(
+			Account::updateOrCreate( // TODO Abstract
 				[
 					'yodlee_account_id' => $account->id
 				],
@@ -245,19 +236,17 @@ class YodleeApi implements BankingProvider
 	public function importTransactions($file = null)
 	{
 		$file == null ? $file = 'transactions.json' : $file = $file;
+
 		$json = json_decode(Storage::disk('local')->get($this->storagePath . $file));
 
 		$transactions = $json->transaction;
 
-		AccountService::import($transactions, 3);
-
-		//		\Facades\AccountService::import($transactions, 3);
+		AccountService::import($transactions, 3);	// TODO Abstract
 	}
 
 	public function refreshAccounts()
 	{
-		$user = User::whereEmail('xxx') // REDACTED
-			->first();
+		$user = User::whereEmail('xxx')->first(); // REDACTED TODO Abstract
 
 		$jwtToken = $this->generateJwtToken();
 
@@ -270,7 +259,9 @@ class YodleeApi implements BankingProvider
 		$message = "Retrieved " . count($accounts->account) . " accounts for $user->email tenant $user->id\n";
 
 		Log::info($message);
+
 		echo $message;
+
 		ray($message)->green();
 
 		Storage::put($this->storagePath . 'accounts.json', json_encode($accounts));
@@ -283,8 +274,7 @@ class YodleeApi implements BankingProvider
 	 */
 	public function refreshTransactionsByAccount($accountId)
 	{
-		$user = User::whereEmail('xxx') // REDACTED
-			->first();
+		$user = User::whereEmail('xxx')->first(); // REDACTED TODO Abstract
 
 		$userJwtToken = $this->generateJWTToken();
 		// $userJwtToken = Crypt::generateJWTToken($this->api_key, $user->yodlee_username);
@@ -296,27 +286,30 @@ class YodleeApi implements BankingProvider
 		$message = "Retrieved " . count($transactions->transaction) . " transactions for $user->email tenant $user->id\n";
 
 		Log::info($message);
+
 		echo $message;
+
 		ray($message)->green();
 	}
 
 	public function refreshTransactions($fromDate = null)
 	{
-		$user = User::whereEmail('xxx') // REDACTED
-			->first();
+		$user = User::whereEmail('xxx')->first(); // REDACTED TODO Abstract
 
-		$userJwtToken = $this->generateJwtToken();		
+		$fromDate == null
+			? $fromDate = Carbon::now()->subDays(90)->format('Y-m-d')
+			: $fromDate = $fromDate;
 
-		$fromDate == null ? $fromDate = Carbon::now()->subDays(90)->format('Y-m-d') : $fromDate = $fromDate;
-
-		$transactions = $this->getTransactions($userJwtToken, $fromDate);
+		$transactions = $this->getTransactions($fromDate);
 
 		Storage::put($this->storagePath . 'transactions.json', json_encode($transactions));
 
 		$message = "Retrieved " . count($transactions->transaction) . " transactions for $user->email from date $fromDate tenant $user->id\n";
 
 		Log::info($message);
+
 		echo $message;
+
 		ray($message)->green();
 	}
 }

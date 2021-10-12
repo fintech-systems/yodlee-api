@@ -2,28 +2,8 @@
 
 namespace FintechSystems\YodleeApi;
 
-use \Firebase\JWT\JWT;
-
 class Crypt
-{	
-	// private $privateKeyFilename = 'private.pem';
-		
-	// public function generateJWTToken()
-	// {
-	// 	$api_key    = $_ENV['YODLEE_API_KEY'];
-	// 	$username   = $_ENV['YODLEE_USERNAME'];
-	// 	$privateKey = file_get_contents($this->privateKeyFilename);
-		
-	// 	$payload = [
-	// 		"iss" => $api_key,
-	// 		"iat" => time(),
-	// 		"exp" => time() + 1800,
-	// 		'sub' => $username,
-	// 	];
-						
-	// 	return JWT::encode($payload, $privateKey, 'RS512');
-	// }
-
+{		
 	public function generateRSAKey()
 	{
 		$config = [

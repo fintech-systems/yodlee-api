@@ -33,6 +33,8 @@ class ApiKeyCommand extends Command
 
     /**
      * Execute the console command.
+     * 
+     * Inspired by https://laravelsecrets.com/
      *
      * @return int
      */
@@ -43,6 +45,7 @@ class ApiKeyCommand extends Command
         $result = collect($result->apiKey);    
             
         $headers = ['key', 'createdDate'];
+
         $data = $result->map(function ($key) {
             return [
                 'key'         => $key->key,

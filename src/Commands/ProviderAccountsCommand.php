@@ -39,7 +39,7 @@ class ProviderAccountsCommand extends Command
      * @return int
      */
     public function handle()
-    {        
+    {
         if ($this->option('cached')) {
             if (!file_exists($this->cachedFile)) {
                 $this->error("--cached was specified but the file $this->cachedFile does not exist");
