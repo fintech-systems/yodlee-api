@@ -3,7 +3,6 @@
 namespace FintechSystems\YodleeApi;
 
 use App\Models\Account;
-use App\Models\User;
 use Carbon\Carbon;
 use Facades\App\Services\AccountService;
 use FintechSystems\YodleeApi\Contracts\BankingProvider;

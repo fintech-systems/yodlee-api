@@ -1,10 +1,15 @@
-Fintech Systems Yodlee Implementation Library
-=============================================
+#Yodlee PHP API
+#==============
 
 ** THIS IS PROTOTYPE AND ALPHA SOFTWARE ** BE CAREFULL **
 
-Laravel Installation
---------------------
+Installation
+------------
+`composer require fintech-systems/yodlee-php-api
+
+
+Laravel Specific Config
+-----------------------
 To publish the config:
 
 ```
@@ -128,5 +133,3 @@ Yodlee apiGet endpoint: https://stage.api.yodlee.uk/ysl/accounts
 Where encountered
 
 After a long time using Bankystatement on local, running art yodlee:get-accounts first didn't have the right API key and now apparently it's not like the JWT token# yodlee-php-api
-# yodlee-php-api
-# yodlee-php-api
