@@ -4,9 +4,11 @@ npm-debug.log
 yarn-error.log
 .env
 .phpunit.result.cache
-
-*.pem
-.env.testing
-*.example.json
 /build
+
+.env.testing
+*.pem
+*.example.json
+*.cache.json
+
 
