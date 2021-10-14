@@ -168,9 +168,14 @@ class YodleeApi implements BankingProvider
         return $this->apiGet('providerAccounts');
     }
 
-    public function getProviders()
+    /**
+     * Get a list of providers
+     * 
+     * 
+     */
+    public function getProviders($priority = 'cobrand')
     {
-        return $this->apiGet('providers');
+        return $this->apiGet("providers?priority=$priority&countryISOCode=ZA");
     }
 
     private function getTransactions()

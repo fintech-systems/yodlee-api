@@ -124,6 +124,15 @@ Look errors up same as above:
 
 https://developer.yodlee.com/search?search_term=Y020
 
+Error
+
+Maximum Thresholds for the day have reached. Please try after 24 hours.
+
+Where encountered
+
+After linking a specific bank ~ 5 times in around 8 hours
+
+
 Error Y023
 
 401	Y023	Token has expired	The Authorization token has expired. Create a fresh valid access token.
