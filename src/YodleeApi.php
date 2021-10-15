@@ -116,7 +116,7 @@ class YodleeApi implements BankingProvider
     }
 
     /**
-     * Original getAccounts() method that include json decoding
+     * Original getAccounts() method that include json decoding.
      */
     public function getAccounts()
     {
@@ -124,9 +124,10 @@ class YodleeApi implements BankingProvider
     }
 
     /**
-     * New GetAccounts API that retrieves accounts without json encode
+     * New GetAccounts API that retrieves accounts without json encode.
      */
-    public function getAccounts2() {
+    public function getAccounts2()
+    {
         return $this->apiGet('accounts');
     }
 
