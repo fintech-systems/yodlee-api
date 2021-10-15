@@ -19,7 +19,7 @@ class ApiKeyCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Get a list of Yodlee API keys';
+    protected $description = 'Retrieve a list of Yodlee API keys';
 
     /**
      * Create a new command instance.

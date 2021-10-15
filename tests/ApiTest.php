@@ -2,6 +2,7 @@
 
 namespace FintechSystems\Api\Tests;
 
+use Facades\FintechSystems\YodleeApi\Commands\AccountsCommand;
 use FintechSystems\YodleeApi\Tests\Setup;
 use FintechSystems\YodleeApi\YodleeApi;
 
@@ -110,6 +111,9 @@ class ApiTest extends Setup
 
         $result = $yodlee->getAccounts();
 
-        $this->assertEquals(7, count($result->account));
+        $this->assertEquals(9, count($result->account));
     }
+
+    
+    
 }

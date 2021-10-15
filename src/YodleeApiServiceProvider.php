@@ -2,6 +2,7 @@
 
 namespace FintechSystems\YodleeApi;
 
+use FintechSystems\YodleeApi\Commands\AccountsCommand;
 use FintechSystems\YodleeApi\Commands\ApiKeyCommand;
 use FintechSystems\YodleeApi\Commands\ProviderAccountsCommand;
 use FintechSystems\YodleeApi\Commands\ProvidersCommand;
@@ -17,7 +18,8 @@ class YodleeApiServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands([
-                ApiKeyCommand::class,
+                AccountsCommand::class,
+                ApiKeyCommand::class,                
                 ProvidersCommand::class,
                 ProviderAccountsCommand::class,
             ]);

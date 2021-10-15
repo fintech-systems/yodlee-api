@@ -6,6 +6,9 @@ use PHPUnit\Framework\TestCase;
 
 class Setup extends TestCase
 {
+    /**
+     * Read and store the environment
+     */
     protected function init()
     {
         $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__.'/../');

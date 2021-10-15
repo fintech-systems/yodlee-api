@@ -115,9 +115,19 @@ class YodleeApi implements BankingProvider
         return JWT::encode($payload, $privateKey, 'RS512');
     }
 
+    /**
+     * Original getAccounts() method that include json decoding
+     */
     public function getAccounts()
     {
         return json_decode($this->apiGet('accounts'));
+    }
+
+    /**
+     * New GetAccounts API that retrieves accounts without json encode
+     */
+    public function getAccounts2() {
+        return $this->apiGet('accounts');
     }
 
     public function getApiKeys()
