@@ -356,7 +356,6 @@ class YodleeApi implements BankingProvider
                 }
             }
         }';
-<<<<<<< HEAD
 
         $url = $this->apiUrl . 'user/register';
         
@@ -374,9 +373,6 @@ class YodleeApi implements BankingProvider
         ray(json_decode($result));
 
         return $result;
-=======
-        $endPoint = $this->api_url.'user/register';
->>>>>>> 01fc2cb1607a306ead18477a5af4c7d31b2a22d7
     }
 
     public function user()
