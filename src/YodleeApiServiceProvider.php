@@ -19,7 +19,7 @@ class YodleeApiServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 AccountsCommand::class,
-                ApiKeyCommand::class,                
+                ApiKeyCommand::class,
                 ProvidersCommand::class,
                 ProviderAccountsCommand::class,
             ]);

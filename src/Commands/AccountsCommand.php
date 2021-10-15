@@ -2,9 +2,9 @@
 
 namespace FintechSystems\YodleeApi\Commands;
 
-use Illuminate\Console\Command;
-use FintechSystems\YodleeApi\Facades\YodleeApi;
 use FintechSystems\LaravelApiHelpers\Commands\LaravelApiHelpersCommand;
+use FintechSystems\YodleeApi\Facades\YodleeApi;
+use Illuminate\Console\Command;
 
 class AccountsCommand extends LaravelApiHelpersCommand
 {
@@ -40,11 +40,12 @@ class AccountsCommand extends LaravelApiHelpersCommand
      * @return int
      */
     public function handle()
-    {        
+    {
         if ($file = $this->checkCachedFileExists()) {
             $this->info('A cached file was returned');
+
             return $file;
-        };
+        }
 
         $result = file_put_contents($this->cachedFile, YodleeApi::getAccounts2());
         $this->info('The API command was successful');

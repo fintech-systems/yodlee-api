@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 class Setup extends TestCase
 {
     /**
-     * Read and store the environment
+     * Read and store the environment.
      */
     protected function init()
     {
