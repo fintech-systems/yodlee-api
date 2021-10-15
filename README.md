@@ -63,6 +63,14 @@ How Yodlee Works (high level overview)
 --------------------------------------
 https://av.developer.yodlee.com/
 
+A video:
+
+https://developer.yodlee.com/vqs
+
+Registering a user
+------------------
+https://av.developer.yodlee.com/#c8fbfce3-bc51-4aeb-a795-301086b918d4
+
 First Steps
 -----------
 You need "/fastlink.php" to set up the link with the bank.
@@ -136,6 +144,7 @@ Where encountered
 
 After linking a specific bank ~ 5 times in around 8 hours
 
+---
 
 Error Y023
 
@@ -159,6 +168,26 @@ Yodlee apiGet endpoint: https://stage.api.yodlee.uk/ysl/accounts
 Where encountered
 
 After a long time using Bankystatement on local, running art yodlee:get-accounts first didn't have the right API key and now apparently it's not like the JWT token# yodlee-php-api
+
+---
+
+Y025
+
+Invalid token. This endpoint does not accept a user-specific token. Provide a token without any user identifier
+
+Where encountered
+
+Setting up a new post request for registerUser() and just using the default header that has a JWTToken
+
+---
+
+Y902
+
+Oops some issue at our end
+
+Where encountered
+
+Sending registerUser() with a blank username
 
 # yodlee-php-api
 

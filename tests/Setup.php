@@ -27,6 +27,7 @@ class Setup extends TestCase
             'api_url'          => $_ENV['YODLEE_API_URL'],
             'api_key'          => $_ENV['YODLEE_API_KEY'],
             'username'         => $_ENV['YODLEE_USERNAME'],
+            'admin_login_id'   => $_ENV['YODLEE_ADMIN_LOGIN_ID'],
         ];
     }
 }

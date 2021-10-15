@@ -5,6 +5,7 @@ namespace FintechSystems\YodleeApi;
 use App\Models\Account;
 use Carbon\Carbon;
 use Facades\App\Services\AccountService;
+use FintechSystems\LaravelApiHelpers\Api;
 use FintechSystems\YodleeApi\Contracts\BankingProvider;
 use Firebase\JWT\JWT;
 use Illuminate\Support\Facades\Log;
@@ -16,44 +17,41 @@ class YodleeApi implements BankingProvider
 
     private $privateKeyFilename = 'private.pem';
 
-    private $api_url;
+    private $apiUrl;
+
+    private $apiKey;
+    
+    private $cobrandName;
+    
+    private $username;
+    
+    private $adminLoginId;
 
     public function __construct(array $client)
     {
-        $this->api_url = $client['api_url'];
-        $this->api_key = $client['api_key'];
+        $this->apiUrl       = $client['api_url'];
+        $this->apiKey       = $client['api_key'];
+        $this->cobrandName  = $client['cobrand_name'];
+        $this->username     = $client['username'];
+        $this->adminLoginId = $client['admin_login_id'];
     }
 
     public function apiGet($endpoint)
-    {
-        ray('Yodlee apiGet endpoint: ' . $this->api_url . $endpoint);
-
+    {        
         $token = $this->generateJwtToken();
 
-        $curl = curl_init();
+        $api = new Api;
 
-        curl_setopt_array($curl, [
-            CURLOPT_URL => $this->api_url . '/' . $endpoint,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_HTTPHEADER => [
+        $response = $api->get($this->apiUrl . $endpoint, 
+            [
                 'Api-Version: 1.1',
                 'Authorization: Bearer ' . $token,
                 'Cobrand-Name: xxx', // REDACTED
                 'Content-Type: application/json',
-            ],
-        ]);
-
-        $response = curl_exec($curl);
+            ]
+        );
 
         ray(json_decode($response));
-
-        curl_close($curl);
 
         return $response;
     }
@@ -97,16 +95,16 @@ class YodleeApi implements BankingProvider
     /**
      * Generate a JWT token from the private key. Used in most requests.
      */
-    public function generateJwtToken()
-    {
-        $api_key = $_ENV['YODLEE_API_KEY'];
-
-        $username = $_ENV['YODLEE_USERNAME'];
+    public function generateJwtToken($username = null)
+    {        
+        if (!$username) {
+            $username = $this->username;            
+        }        
 
         $privateKey = file_get_contents(__DIR__ . '/../' . $this->privateKeyFilename);
 
         $payload = [
-            'iss' => $api_key,
+            'iss' => $this->apiKey,
             'iat' => time(),
             'exp' => time() + 1800,
             'sub' => $username,
@@ -116,7 +114,7 @@ class YodleeApi implements BankingProvider
     }
 
     /**
-     * Original getAccounts() method that include json decoding.
+     * Original getAccounts() method that includes json decoding.
      */
     public function getAccounts()
     {
@@ -124,7 +122,7 @@ class YodleeApi implements BankingProvider
     }
 
     /**
-     * New GetAccounts API that retrieves accounts without json encode.
+     * New GetAccounts API that retrieves accounts without json encoding.
      */
     public function getAccounts2()
     {
@@ -315,7 +313,7 @@ class YodleeApi implements BankingProvider
 
     public function registerUser()
     {
-        $rawData = '
+        $postFields = '
         {
             "user": {
                 "loginName": "jan.smit",
@@ -339,8 +337,23 @@ class YodleeApi implements BankingProvider
                 }
             }
         }';
-        $endPoint = $this->api_url . 'user/register';
+
+        $url = $this->apiUrl . 'user/register';
         
+        $header =  [
+            'Api-Version: 1.1',
+            'Cobrand-Name: ' . $this->cobrandName,
+            'Authorization: Bearer ' . $this->generateJwtToken($this->adminLoginId),
+            // 'Content-Type: application/json',
+        ];
+
+        $api = new Api;
+
+        $result = $api->post($url, $postFields, $header);
+
+        ray(json_decode($result));
+
+        return $result;
     }
 
     public function user()

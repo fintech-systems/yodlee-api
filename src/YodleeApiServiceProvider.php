@@ -6,6 +6,7 @@ use FintechSystems\YodleeApi\Commands\AccountsCommand;
 use FintechSystems\YodleeApi\Commands\ApiKeyCommand;
 use FintechSystems\YodleeApi\Commands\ProviderAccountsCommand;
 use FintechSystems\YodleeApi\Commands\ProvidersCommand;
+use FintechSystems\YodleeApi\Commands\RegisterUserCommand;
 use FintechSystems\YodleeApi\Commands\UserCommand;
 use Illuminate\Support\ServiceProvider;
 
@@ -23,6 +24,7 @@ class YodleeApiServiceProvider extends ServiceProvider
                 ApiKeyCommand::class,
                 ProvidersCommand::class,
                 ProviderAccountsCommand::class,
+                RegisterUserCommand::class,
                 UserCommand::class,
             ]);
         }
@@ -38,6 +40,7 @@ class YodleeApiServiceProvider extends ServiceProvider
                 'api_url'          => $_ENV['YODLEE_API_URL'],
                 'api_key'          => $_ENV['YODLEE_API_KEY'],
                 'username'         => $_ENV['YODLEE_USERNAME'],
+                'admin_login_id'   => $_ENV['YODLEE_ADMIN_LOGIN_ID'],
             ]);
         });
     }

@@ -1,7 +1,8 @@
 <?php
 
-require __DIR__.'/vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
+use FintechSystems\LaravelApiHelpers\Api;
 use Firebase\JWT\JWT;
 
 class Yodlee
@@ -41,13 +42,13 @@ class Yodlee
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => '{
         "cobrand":      {
-          "cobrandLogin": "'.$cobrandArray['cobrandLogin'].'",
-          "cobrandPassword": "'.$cobrandArray['cobrandPassword'].'"
+          "cobrandLogin": "' . $cobrandArray['cobrandLogin'] . '",
+          "cobrandPassword": "' . $cobrandArray['cobrandPassword'] . '"
          }
     }',
             CURLOPT_HTTPHEADER => [
                 'Api-Version: 1.1',
-                'Cobrand-Name: '.$cobrandArray['cobrandName'],
+                'Cobrand-Name: ' . $cobrandArray['cobrandName'],
                 'Content-Type: application/json',
                 'Cookie: JSESSIONID=xxx', // REDACTED
             ],
@@ -83,18 +84,18 @@ class Yodlee
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => '{
-        "publicKey": "'.$public_key.'"
+        "publicKey": "' . $public_key . '"
   }',
             CURLOPT_HTTPHEADER => [
                 'Api-Version: 1.1',
-                'Authorization: cobSession='.$cobrandArray['cobSession'],
-                'Cobrand-Name: '.$cobrandArray['cobrandName'],
+                'Authorization: cobSession=' . $cobrandArray['cobSession'],
+                'Cobrand-Name: ' . $cobrandArray['cobrandName'],
                 'Content-Type: application/json',
             ],
         ]);
 
         $response = curl_exec($curl);
-        echo "\n".$response."\n";
+        echo "\n" . $response . "\n";
         curl_close($curl);
         $object = json_decode($response);
 
@@ -117,18 +118,18 @@ class Yodlee
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => '{
-        "publicKey": "'.$public_key.'"
+        "publicKey": "' . $public_key . '"
   }',
             CURLOPT_HTTPHEADER => [
                 'Api-Version: 1.1',
-                'Authorization: cobSession='.$cobrandArray['cobSession'],
-                'Cobrand-Name: '.$cobrandArray['cobrandName'],
+                'Authorization: cobSession=' . $cobrandArray['cobSession'],
+                'Cobrand-Name: ' . $cobrandArray['cobrandName'],
                 'Content-Type: application/json',
             ],
         ]);
 
         $response = curl_exec($curl);
-        echo "\n".$response."\n";
+        echo "\n" . $response . "\n";
         curl_close($curl);
         $object = json_decode($response);
 
@@ -173,7 +174,7 @@ class Yodlee
             CURLOPT_CUSTOMREQUEST => 'GET',
             CURLOPT_HTTPHEADER => [
                 'Api-Version: 1.1',
-                'Authorization: Bearer '.$jwt_token,
+                'Authorization: Bearer ' . $jwt_token,
                 'Cobrand-Name: xxx', // REDACTED
                 'Content-Type: application/json',
             ],
@@ -203,7 +204,7 @@ class Yodlee
             CURLOPT_HTTPHEADER => [
                 'Api-Version: 1.1',
                 'Cobrand-Name: xxx', // REDACTED
-                'Authorization: Bearer '.$jwt_token,
+                'Authorization: Bearer ' . $jwt_token,
             ],
         ]);
 
@@ -214,50 +215,4 @@ class Yodlee
         return $object;
     }
 
-    public static function registerUser($user_data, $jwt_token, $register_url)
-    {
-        curl_setopt_array($curl, [
-            CURLOPT_URL => $register_url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => '{
-"user": {
-  "loginName": '.$user_data['loginName'].', 
-  "name": {
-    "first": '.$user_data['firstName'].',
-    "last": '.$user_data['lastName'].' 
-    },
-  "email": "'.$user_data['email'].'",
-  "address": {
-    "address1": "'.$user_data['adress1'].'",
-    "state": "'.$user_data['state'].'",
-    "city": "'.$user_data['city'].'",
-    "zip": "'.$user_data['zip'].'",
-    "country": "'.$user_data['country'].'"
-    },
-  "preferences": {
-    "currency": "'.$user_data['currency'].'",
-    "locale": "'.$user_data['en_locale'].'"
-    }
-  }
-}',
-            CURLOPT_HTTPHEADER => [
-                'Api-Version: 1.1',
-                'Cobrand-Name: xxx', // REDACTED
-                'Authorization: Bearer '.$jwt_token,
-                'Content-Type: application/json',
-            ],
-        ]);
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-
-        return $response;
-    }
 }
