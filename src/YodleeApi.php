@@ -20,29 +20,29 @@ class YodleeApi implements BankingProvider
     private $apiUrl;
 
     private $apiKey;
-    
+
     private $cobrandName;
-    
+
     private $username;
-    
+
     private $adminLoginId;
 
     public function __construct(array $client)
     {
-        $this->apiUrl       = $client['api_url'];
-        $this->apiKey       = $client['api_key'];
-        $this->cobrandName  = $client['cobrand_name'];
-        $this->username     = $client['username'];
+        $this->apiUrl = $client['api_url'];
+        $this->apiKey = $client['api_key'];
+        $this->cobrandName = $client['cobrand_name'];
+        $this->username = $client['username'];
         $this->adminLoginId = $client['admin_login_id'];
     }
 
     public function apiGet($endpoint)
-    {        
+    {
         $token = $this->generateJwtToken();
 
         $api = new Api;
 
-        $response = $api->get($this->apiUrl . $endpoint, 
+        $response = $api->get($this->apiUrl.$endpoint,
             [
                 'Api-Version: 1.1',
                 'Authorization: Bearer '.$token,
@@ -96,10 +96,10 @@ class YodleeApi implements BankingProvider
      * Generate a JWT token from the private key. Used in most requests.
      */
     public function generateJwtToken($username = null)
-    {        
-        if (!$username) {
-            $username = $this->username;            
-        }        
+    {
+        if (! $username) {
+            $username = $this->username;
+        }
 
         $privateKey = file_get_contents(__DIR__.'/../'.$this->privateKeyFilename);
 
@@ -338,12 +338,12 @@ class YodleeApi implements BankingProvider
             }
         }';
 
-        $url = $this->apiUrl . 'user/register';
-        
-        $header =  [
+        $url = $this->apiUrl.'user/register';
+
+        $header = [
             'Api-Version: 1.1',
-            'Cobrand-Name: ' . $this->cobrandName,
-            'Authorization: Bearer ' . $this->generateJwtToken($this->adminLoginId),
+            'Cobrand-Name: '.$this->cobrandName,
+            'Authorization: Bearer '.$this->generateJwtToken($this->adminLoginId),
             'Content-Type: application/json',
         ];
 
