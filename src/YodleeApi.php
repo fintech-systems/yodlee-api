@@ -51,7 +51,7 @@ class YodleeApi implements BankingProvider
 
         $response = curl_exec($curl);
 
-        ray($response);
+        ray(json_decode($response));
 
         curl_close($curl);
 
