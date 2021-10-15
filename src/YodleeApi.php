@@ -37,32 +37,13 @@ class YodleeApi implements BankingProvider
     }
 
     public function apiGet($endpoint)
-<<<<<<< HEAD
     {        
-=======
-    {
-        ray('Yodlee apiGet endpoint: '.$this->api_url.$endpoint);
-
->>>>>>> 01fc2cb1607a306ead18477a5af4c7d31b2a22d7
         $token = $this->generateJwtToken();
 
         $api = new Api;
 
-<<<<<<< HEAD
         $response = $api->get($this->apiUrl . $endpoint, 
             [
-=======
-        curl_setopt_array($curl, [
-            CURLOPT_URL => $this->api_url.'/'.$endpoint,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_HTTPHEADER => [
->>>>>>> 01fc2cb1607a306ead18477a5af4c7d31b2a22d7
                 'Api-Version: 1.1',
                 'Authorization: Bearer '.$token,
                 'Cobrand-Name: xxx', // REDACTED
@@ -363,7 +344,7 @@ class YodleeApi implements BankingProvider
             'Api-Version: 1.1',
             'Cobrand-Name: ' . $this->cobrandName,
             'Authorization: Bearer ' . $this->generateJwtToken($this->adminLoginId),
-            // 'Content-Type: application/json',
+            'Content-Type: application/json',
         ];
 
         $api = new Api;
