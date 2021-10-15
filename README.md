@@ -59,6 +59,10 @@ yodlee:provider-accounts              Retrieve a list of Yodlee provider account
 yodlee:providers                      Retrieve a list of Yodlee providers
 ```
 
+How Yodlee Works (high level overview)
+--------------------------------------
+https://av.developer.yodlee.com/
+
 First Steps
 -----------
 You need "/fastlink.php" to set up the link with the bank.

@@ -6,6 +6,7 @@ use FintechSystems\YodleeApi\Commands\AccountsCommand;
 use FintechSystems\YodleeApi\Commands\ApiKeyCommand;
 use FintechSystems\YodleeApi\Commands\ProviderAccountsCommand;
 use FintechSystems\YodleeApi\Commands\ProvidersCommand;
+use FintechSystems\YodleeApi\Commands\UserCommand;
 use Illuminate\Support\ServiceProvider;
 
 class YodleeApiServiceProvider extends ServiceProvider
@@ -22,6 +23,7 @@ class YodleeApiServiceProvider extends ServiceProvider
                 ApiKeyCommand::class,
                 ProvidersCommand::class,
                 ProviderAccountsCommand::class,
+                UserCommand::class,
             ]);
         }
     }
