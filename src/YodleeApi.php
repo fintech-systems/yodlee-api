@@ -169,9 +169,7 @@ class YodleeApi implements BankingProvider
     }
 
     /**
-     * Get a list of providers
-     * 
-     * 
+     * Get a list of providers.
      */
     public function getProviders($priority = 'cobrand')
     {
