@@ -13,7 +13,7 @@ class AccountsCommand extends LaravelApiHelpersCommand
      *
      * @var string
      */
-    protected $signature = 'yodlee:accounts {--cached}';
+    protected $signature = 'yodlee:accounts {username : The ID of the user} {--cached : Whetever a cached file should be retrieved}';
 
     /**
      * The console command description.
@@ -47,7 +47,9 @@ class AccountsCommand extends LaravelApiHelpersCommand
             return $file;
         }
 
-        $result = file_put_contents($this->cachedFile, YodleeApi::getAccounts2());
+        $result = file_put_contents($this->cachedFile, YodleeApi::getAccounts2(
+            $this->argument('username')
+        ));
         $this->info('The API command was successful');
 
         return $result;

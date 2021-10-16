@@ -2,8 +2,9 @@
 
 namespace FintechSystems\YodleeApi\Commands;
 
-use FintechSystems\YodleeApi\Facades\YodleeApi;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
+use FintechSystems\YodleeApi\Facades\YodleeApi;
 
 class RegisterUserCommand extends Command
 {
@@ -44,13 +45,15 @@ class RegisterUserCommand extends Command
         );
 
         if (isset($result->errorCode)) {
-            $this->error($result->errorMessage);
+            $this->error($result->errorMessage); // Output the error to the console
+
+            Log::error($result->errorMessage);
 
             return -1;
         }
 
         $this->info($result->user->id);
 
-        return 0;
+        return $result->user->id;
     }
 }

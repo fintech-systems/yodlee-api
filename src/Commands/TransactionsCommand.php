@@ -6,23 +6,23 @@ use FintechSystems\LaravelApiHelpers\Commands\LaravelApiHelpersCommand;
 use FintechSystems\YodleeApi\Facades\YodleeApi;
 use Illuminate\Console\Command;
 
-class UserCommand extends LaravelApiHelpersCommand
+class TransactionsCommand extends LaravelApiHelpersCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'yodlee:user {--cached}';
+    protected $signature = 'yodlee:transactions {username} {--cached}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Retrieve Yodlee user';
+    protected $description = 'Retrieve a list of Yodlee transactions for a user';
 
-    public $cachedFile = 'user.cache.json';
+    public $cachedFile = 'transactions.cache.json';
 
     /**
      * Create a new command instance.
@@ -47,7 +47,10 @@ class UserCommand extends LaravelApiHelpersCommand
             return $file;
         }
 
-        $result = file_put_contents($this->cachedFile, YodleeApi::user());
+        $result = file_put_contents($this->cachedFile, YodleeApi::getTransactions2(
+            $this->argument('username')
+        ));
+
         $this->info('The API command was successful');
 
         return $result;

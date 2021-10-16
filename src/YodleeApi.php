@@ -36,12 +36,15 @@ class YodleeApi implements BankingProvider
         $this->privateKey = file_get_contents(__DIR__.'/../'.$this->privateKeyFilename);
     }
 
-    public function apiGet($endpoint)
+    public function apiGet($endpoint, $username = null)
     {
-        $token = $this->generateJwtToken($this->username);
-
-        ray($token);
-
+        if ($username == null) {
+            Log::warning("No username was specified so generating a token for $this->username");
+            $token = $this->generateJwtToken($this->username);
+        } else {
+            $token = $this->generateJwtToken($username);
+        }
+        
         $api = new Api;
 
         $response = $api->get(
@@ -60,14 +63,7 @@ class YodleeApi implements BankingProvider
     }
 
     public function deleteUser($loginName)
-    {
-        // $postFields = "
-        // {
-        //     'user': {
-        //         'loginName': $loginName
-        //     }
-        // }";
-
+    {        
         $url = $this->apiUrl.'user/unregister';
 
         $header = [
@@ -80,6 +76,10 @@ class YodleeApi implements BankingProvider
         $api = new Api;
 
         $result = $api->delete($url, $header);
+
+        ray("Outputting the result of a Yodlee delete command");
+        
+        ray($result);
 
         ray(json_decode($result));
 
@@ -156,9 +156,9 @@ class YodleeApi implements BankingProvider
     /**
      * New GetAccounts API that retrieves accounts without json encoding.
      */
-    public function getAccounts2()
+    public function getAccounts2($loginName)
     {
-        return $this->apiGet('accounts');
+        return $this->apiGet('accounts', $loginName);
     }
 
     public function getApiKeys()
@@ -217,9 +217,20 @@ class YodleeApi implements BankingProvider
         return $this->apiGet("providers?priority=$priority&countryISOCode=ZA");
     }
 
+    /**
+     * TODO Deprecate, reasons:
+     * 
+     * 1. json decoding happening too quickly
+     * 2. fromDate hardcoded
+     */
     private function getTransactions()
     {
         return json_decode($this->apiGet('transactions?fromDate=2020-08-01'));
+    }
+
+    public function getTransactions2($loginName)
+    {
+        return $this->apiGet('transactions', $loginName);
     }
 
     private function getTransactionsByAccount($accountId, $fromDate = null)
@@ -348,29 +359,14 @@ class YodleeApi implements BankingProvider
         $postFields = '
         {
             "user": {
-              "preferences": {
-                "dateFormat": "string",
-                "timeZone": "string",
-                "currency": "AUD",
-                "locale": "en_US"
-              },
-              "address": {
-                "zip": "string",
-                "country": "string",
-                "address3": "string",
-                "address2": "string",
-                "city": "string",
-                "address1": "string",
-                "state": "string"
-              },
-              "loginName":"'.$loginName.'",
-              "name": {
-                "middle": "string",
-                "last": "string",
-                "fullName": "string",
-                "first": "string"
-              },
-              "email": "'.$email.'"
+              "loginName":"'.$loginName.'",              
+              "email": "'.$email.'",
+              "preferences": {                
+                "currency": "ZAR",
+                "timeZone": "GMT+2",
+                "dateFormat": "yyyy-MM-dd",
+                "locale": "en_ZA"
+              }              
             }
           }
         ';
@@ -395,8 +391,10 @@ class YodleeApi implements BankingProvider
         return json_decode($result);
     }
 
-    public function user()
+    public function getUser($username)
     {
-        return $this->apiGet('user');
+        ray("Trying to retrieve info for this user " . $username);
+        
+        return $this->apiGet('user', $username);
     }
 }

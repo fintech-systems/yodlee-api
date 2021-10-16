@@ -55,9 +55,21 @@ Provider Accounts
 -----------------
 
 ```
+yodlee:accounts                       Retrieve a list of Yodlee accounts
+yodlee:api-key                        Retrieve a list of Yodlee API keys
+yodlee:delete-user                    Delete a Yodlee user
+yodlee:get-user                       Retrieve Yodlee user
 yodlee:provider-accounts              Retrieve a list of Yodlee provider accounts
 yodlee:providers                      Retrieve a list of Yodlee providers
+yodlee:register-user                  Register a new Yodlee user
 ```
+
+Testing Fastlink
+----------------
+Use these credentials to test Fastlink:
+
+Username (case-sensitive): DAGtest.site16441.1
+Password: site16441.1
 
 How Yodlee Works (high level overview)
 --------------------------------------
