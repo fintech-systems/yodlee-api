@@ -230,6 +230,7 @@ class YodleeApi implements BankingProvider
 
     public function getTransactions2($loginName)
     {
+        // return $this->apiGet('transactions?fromDate=2021-10-01', $loginName);
         return $this->apiGet('transactions', $loginName);
     }
 
@@ -241,63 +242,7 @@ class YodleeApi implements BankingProvider
 
         return json_decode($this->apiGet("transactions?account_id=$accountId&fromDate=$fromDate"));
     }
-
-    /**
-     * Import accounts from Yodlee by reading the local accounts.json file outputted to disk
-     * Only update fields directly from the Yodlee source, which should
-     * exclude the user's assigned name and nickname.
-     */
-    public function importAccounts()
-    {
-        $json = json_decode(Storage::disk('local')->get($this->storagePath.'accounts.json'));
-
-        $accounts = $json->account;
-
-        foreach ($accounts as $account) {
-            Account::updateOrCreate( // TODO Abstract
-                [
-                    'yodlee_account_id' => $account->id,
-                ],
-                [
-                    'user_id'             => 3,
-                    'container'           => $account->CONTAINER,
-                    'provider_account_id' => $account->providerAccountId,
-                    'name'                => $account->accountName,
-                    'number'              => $account->accountNumber,
-                    'balance'             => $account->balance->amount,
-                    'available_balance'   => $account->availableBalance->amount ?? null,
-                    'current_balance'     => $account->currentBalance->amount ?? null,
-                    'currency'            => $account->balance->currency,
-                    'provider_id'         => $account->providerId,
-                    'provider_name'       => $account->providerName,
-                    'type'                => $account->accountType,
-                    'display_name'        => $account->displayedName ?? null,
-                    'classification'      => $account->classification ?? null,
-                    'interest_rate'       => $account->interestRateType ?? null,
-                    'yodlee_dataset_name' => $account->dataset[0]->name,
-                    'yodlee_updated_at'   => Carbon::parse($account->dataset[0]->lastUpdated)->format('Y-m-d H:i:s'),
-                ]
-            );
-
-            $message = "Imported $account->CONTAINER account $account->accountName #$account->accountNumber with account balance of {$account->balance->amount} from $account->providerName for tentant 3\n";
-
-            Log::info($message);
-            echo $message;
-            ray($message)->green();
-        }
-    }
-
-    public function importTransactions($file = null)
-    {
-        $file == null ? $file = 'transactions.json' : $file = $file;
-
-        $json = json_decode(Storage::disk('local')->get($this->storagePath.$file));
-
-        $transactions = $json->transaction;
-
-        AccountService::import($transactions, 3);    // TODO Abstract
-    }
-
+    
     public function refreshAccounts()
     {
         $accounts = $this->getAccounts();
@@ -320,7 +265,7 @@ class YodleeApi implements BankingProvider
      */
     public function refreshTransactionsByAccount($accountId)
     {
-        $userJwtToken = $this->generateJWTToken();
+        $userJwtToken = $this->generateJWTToken($this->username);
 
         $transactions = $this->getTransactionsByAccount($userJwtToken, $accountId);
 
