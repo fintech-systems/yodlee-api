@@ -10,3 +10,9 @@ All notable changes to `yodlee-php-api` will be documented in this file.
 
 - initial release
 - prototype converted from jacquestrdx123
+
+## 0.0.0 - 2021-10-10
+
+- pre-release
+- removed "dd" depenency and added orchestra testbench instead
+- added *.json to .gitignore

@@ -137,14 +137,6 @@ This will provide you with variables required for the test phases
 
 *NB* Save the output to a file for later use *NB*
 
-Change Log
-----------
-
-10 October 2021
-
-- Removed "dd" depenency and added orchestra testbench instead
-- Added *.json to .gitignore
-
 Need help?
 ----------
 
