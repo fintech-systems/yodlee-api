@@ -4,7 +4,6 @@ namespace FintechSystems\YodleeApi;
 
 use App\Models\Account;
 use Carbon\Carbon;
-use Facades\App\Services\AccountService;
 use FintechSystems\LaravelApiHelpers\Api;
 use FintechSystems\YodleeApi\Contracts\BankingProvider;
 use Firebase\JWT\JWT;
@@ -242,7 +241,7 @@ class YodleeApi implements BankingProvider
 
         return json_decode($this->apiGet("transactions?account_id=$accountId&fromDate=$fromDate"));
     }
-    
+
     public function refreshAccounts()
     {
         $accounts = $this->getAccounts();
