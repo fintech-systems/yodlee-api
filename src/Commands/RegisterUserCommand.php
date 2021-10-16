@@ -2,9 +2,9 @@
 
 namespace FintechSystems\YodleeApi\Commands;
 
+use FintechSystems\YodleeApi\Facades\YodleeApi;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use FintechSystems\YodleeApi\Facades\YodleeApi;
 
 class RegisterUserCommand extends Command
 {
