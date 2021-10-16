@@ -50,7 +50,7 @@ class GetUserCommand extends LaravelApiHelpersCommand
         $result = file_put_contents($this->cachedFile, YodleeApi::getUser(
             $this->argument('username')
         ));
-        
+
         return $result;
     }
 }

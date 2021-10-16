@@ -44,7 +44,7 @@ class YodleeApi implements BankingProvider
         } else {
             $token = $this->generateJwtToken($username);
         }
-        
+
         $api = new Api;
 
         $response = $api->get(
@@ -63,7 +63,7 @@ class YodleeApi implements BankingProvider
     }
 
     public function deleteUser($loginName)
-    {        
+    {
         $url = $this->apiUrl.'user/unregister';
 
         $header = [
@@ -77,8 +77,8 @@ class YodleeApi implements BankingProvider
 
         $result = $api->delete($url, $header);
 
-        ray("Outputting the result of a Yodlee delete command");
-        
+        ray('Outputting the result of a Yodlee delete command');
+
         ray($result);
 
         ray(json_decode($result));
@@ -218,8 +218,8 @@ class YodleeApi implements BankingProvider
     }
 
     /**
-     * TODO Deprecate, reasons:
-     * 
+     * TODO Deprecate, reasons:.
+     *
      * 1. json decoding happening too quickly
      * 2. fromDate hardcoded
      */
@@ -393,8 +393,8 @@ class YodleeApi implements BankingProvider
 
     public function getUser($username)
     {
-        ray("Trying to retrieve info for this user " . $username);
-        
+        ray('Trying to retrieve info for this user '.$username);
+
         return $this->apiGet('user', $username);
     }
 }
