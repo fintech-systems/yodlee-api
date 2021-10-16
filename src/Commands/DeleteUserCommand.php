@@ -19,7 +19,7 @@ class DeleteUserCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Delete a Yodlee user';    
+    protected $description = 'Delete a Yodlee user';
 
     /**
      * Create a new command instance.
@@ -39,7 +39,7 @@ class DeleteUserCommand extends Command
     public function handle()
     {
         $result = YodleeApi::deleteUser($this->argument('username'));
-        
+
         return $result;
     }
 }

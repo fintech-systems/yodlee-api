@@ -2,7 +2,6 @@
 
 namespace FintechSystems\YodleeApi\Commands;
 
-use FintechSystems\LaravelApiHelpers\Commands\LaravelApiHelpersCommand;
 use FintechSystems\YodleeApi\Facades\YodleeApi;
 use Illuminate\Console\Command;
 
@@ -43,9 +42,10 @@ class RegisterUserCommand extends Command
             $this->argument('username'),
             $this->argument('email')
         );
-        
+
         if (isset($result->errorCode)) {
             $this->error($result->errorMessage);
+
             return -1;
         }
 
