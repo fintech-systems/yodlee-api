@@ -189,5 +189,13 @@ Where encountered
 
 Sending registerUser() with a blank username
 
-# yodlee-php-api
+---
+
+Y800
+
+Invalid value for userParam
+
+Where encountered
+
+Trying to create a new user after having deleted the main user
 

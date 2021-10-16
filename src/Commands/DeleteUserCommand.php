@@ -2,25 +2,24 @@
 
 namespace FintechSystems\YodleeApi\Commands;
 
-use FintechSystems\LaravelApiHelpers\Commands\LaravelApiHelpersCommand;
 use FintechSystems\YodleeApi\Facades\YodleeApi;
 use Illuminate\Console\Command;
 
-class RegisterUserCommand extends Command
+class DeleteUserCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'yodlee:register-user {username} {email}';
+    protected $signature = 'yodlee:delete-user {username}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Register a new Yodlee user';
+    protected $description = 'Delete a Yodlee user';    
 
     /**
      * Create a new command instance.
@@ -39,18 +38,8 @@ class RegisterUserCommand extends Command
      */
     public function handle()
     {
-        $result = YodleeApi::registerUser(
-            $this->argument('username'),
-            $this->argument('email')
-        );
+        $result = YodleeApi::deleteUser($this->argument('username'));
         
-        if (isset($result->errorCode)) {
-            $this->error($result->errorMessage);
-            return -1;
-        }
-
-        $this->info($result->user->id);
-
-        return 0;
+        return $result;
     }
 }

@@ -17,35 +17,38 @@ class YodleeApi implements BankingProvider
 
     private $privateKeyFilename = 'private.pem';
 
+    private $privateKey;
+
     private $apiUrl;
 
     private $apiKey;
 
     private $cobrandName;
 
-    private $username;
-
-    private $adminLoginId;
+    private $username;    
 
     public function __construct(array $client)
     {
-        $this->apiUrl = $client['api_url'];
-        $this->apiKey = $client['api_key'];
-        $this->cobrandName = $client['cobrand_name'];
-        $this->username = $client['username'];
-        $this->adminLoginId = $client['admin_login_id'];
+        $this->apiUrl       = $client['api_url'];
+        $this->apiKey       = $client['api_key'];
+        $this->cobrandName  = $client['cobrand_name'];
+        $this->username     = $client['username'];        
+        $this->privateKey   = file_get_contents(__DIR__ . '/../' . $this->privateKeyFilename);
     }
 
     public function apiGet($endpoint)
     {
-        $token = $this->generateJwtToken();
+        $token = $this->generateJwtToken($this->username);
+
+        ray($token);
 
         $api = new Api;
 
-        $response = $api->get($this->apiUrl.$endpoint,
+        $response = $api->get(
+            $this->apiUrl . $endpoint,
             [
                 'Api-Version: 1.1',
-                'Authorization: Bearer '.$token,
+                'Authorization: Bearer ' . $token,
                 'Cobrand-Name: xxx', // REDACTED
                 'Content-Type: application/json',
             ]
@@ -54,6 +57,33 @@ class YodleeApi implements BankingProvider
         ray(json_decode($response));
 
         return $response;
+    }
+
+    public function deleteUser($loginName)
+    {
+        // $postFields = "
+        // {
+        //     'user': {
+        //         'loginName': $loginName
+        //     }
+        // }";
+
+        $url = $this->apiUrl . 'user/unregister';
+
+        $header = [
+            'Api-Version: 1.1',
+            'Cobrand-Name: ' . $this->cobrandName,
+            'Authorization: Bearer ' . $this->generateJwtToken($loginName),
+            'Content-Type: application/json',
+        ];
+
+        $api = new Api;
+
+        $result = $api->delete($url, $header);
+
+        ray(json_decode($result));
+
+        return $result;
     }
 
     public function generateApiKey($url, $cobrandArray, $publicKey)
@@ -72,12 +102,12 @@ class YodleeApi implements BankingProvider
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => '{
-        		"publicKey": "'.$publicKey.'"
+        		"publicKey": "' . $publicKey . '"
   			}',
             CURLOPT_HTTPHEADER => [
                 'Api-Version: 1.1',
-                'Authorization: cobSession='.$cobrandArray['cobSession'],
-                'Cobrand-Name: '.$cobrandArray['cobrandName'],
+                'Authorization: cobSession=' . $cobrandArray['cobSession'],
+                'Cobrand-Name: ' . $cobrandArray['cobrandName'],
                 'Content-Type: application/json',
             ],
         ]);
@@ -92,25 +122,27 @@ class YodleeApi implements BankingProvider
         return $object->apiKey['0']->key ?? $response;
     }
 
-    /**
-     * Generate a JWT token from the private key. Used in most requests.
-     */
-    public function generateJwtToken($username = null)
-    {
-        if (! $username) {
-            $username = $this->username;
-        }
-
-        $privateKey = file_get_contents(__DIR__.'/../'.$this->privateKeyFilename);
-
+    public function generateGenericJwtToken()
+    {                
+        $payload = [
+            'iss' => $this->apiKey,
+            'iat' => time(),
+            'exp' => time() + 1800,            
+        ];
+        
+        return JWT::encode($payload, $this->privateKey, 'RS512');
+    }
+        
+    public function generateJwtToken($username)
+    {                
         $payload = [
             'iss' => $this->apiKey,
             'iat' => time(),
             'exp' => time() + 1800,
             'sub' => $username,
         ];
-
-        return JWT::encode($payload, $privateKey, 'RS512');
+        
+        return JWT::encode($payload, $this->privateKey, 'RS512');
     }
 
     /**
@@ -149,13 +181,13 @@ class YodleeApi implements BankingProvider
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => '{
         		"cobrand":      {
-					"cobrandLogin": "'.$cobrandArray['cobrandLogin'].'",
-					"cobrandPassword": "'.$cobrandArray['cobrandPassword'].'"
+					"cobrandLogin": "' . $cobrandArray['cobrandLogin'] . '",
+					"cobrandPassword": "' . $cobrandArray['cobrandPassword'] . '"
          		}
     		}',
             CURLOPT_HTTPHEADER => [
                 'Api-Version: 1.1',
-                'Cobrand-Name: '.$cobrandArray['cobrandName'],
+                'Cobrand-Name: ' . $cobrandArray['cobrandName'],
                 'Content-Type: application/json',
                 'Cookie: JSESSIONID=xxx', // REDACTED TO Research
             ],
@@ -206,7 +238,7 @@ class YodleeApi implements BankingProvider
      */
     public function importAccounts()
     {
-        $json = json_decode(Storage::disk('local')->get($this->storagePath.'accounts.json'));
+        $json = json_decode(Storage::disk('local')->get($this->storagePath . 'accounts.json'));
 
         $accounts = $json->account;
 
@@ -248,7 +280,7 @@ class YodleeApi implements BankingProvider
     {
         $file == null ? $file = 'transactions.json' : $file = $file;
 
-        $json = json_decode(Storage::disk('local')->get($this->storagePath.$file));
+        $json = json_decode(Storage::disk('local')->get($this->storagePath . $file));
 
         $transactions = $json->transaction;
 
@@ -259,9 +291,9 @@ class YodleeApi implements BankingProvider
     {
         $accounts = $this->getAccounts();
 
-        Storage::put($this->storagePath.'accounts.json', json_encode($accounts));
+        Storage::put($this->storagePath . 'accounts.json', json_encode($accounts));
 
-        $message = 'Retrieved '.count($accounts->account).' accounts';
+        $message = 'Retrieved ' . count($accounts->account) . ' accounts';
 
         Log::info($message);
 
@@ -283,7 +315,7 @@ class YodleeApi implements BankingProvider
 
         Storage::put("$this->storagePath$accountId.json", json_encode($transactions));
 
-        $message = 'Retrieved '.count($transactions->transaction).' transactions';
+        $message = 'Retrieved ' . count($transactions->transaction) . ' transactions';
 
         Log::info($message);
 
@@ -300,9 +332,9 @@ class YodleeApi implements BankingProvider
 
         $transactions = $this->getTransactions($fromDate);
 
-        Storage::put($this->storagePath.'transactions.json', json_encode($transactions));
+        Storage::put($this->storagePath . 'transactions.json', json_encode($transactions));
 
-        $message = 'Retrieved '.count($transactions->transaction).' transactions';
+        $message = 'Retrieved ' . count($transactions->transaction) . ' transactions';
 
         Log::info($message);
 
@@ -311,39 +343,46 @@ class YodleeApi implements BankingProvider
         ray($message)->green();
     }
 
-    public function registerUser()
+    public function registerUser($loginName, $email)
     {
         $postFields = '
         {
             "user": {
-                "loginName": "jan.smit",
-                "email": "jsmit@voorbeeld.com",
-                "name": {
-                    "first": "Jan",
-                    "last": "Smit"
-                },
-                "address": {
-                    "address1": "20 Kloof Street",
-                    "state": "Western Cape",
-                    "city": "Cape Town",
-                    "zip": "8001",
-                    "country": "South Africa"
-                },
-                "preferences": {
-                    "currency": "ZAR",
-                    "timeZone": "GMT+2",
-                    "dateFormat": "dd/MM/yyyy",
-                    "locale": "en_ZA"
-                }
+              "preferences": {
+                "dateFormat": "string",
+                "timeZone": "string",
+                "currency": "AUD",
+                "locale": "en_US"
+              },
+              "address": {
+                "zip": "string",
+                "country": "string",
+                "address3": "string",
+                "address2": "string",
+                "city": "string",
+                "address1": "string",
+                "state": "string"
+              },
+              "loginName":"' . $loginName  .'",
+              "name": {
+                "middle": "string",
+                "last": "string",
+                "fullName": "string",
+                "first": "string"
+              },
+              "email": "' . $email  .'"
             }
-        }';
+          }
+        ';
 
-        $url = $this->apiUrl.'user/register';
+        ray($postFields);
+
+        $url = $this->apiUrl . 'user/register';
 
         $header = [
             'Api-Version: 1.1',
-            'Cobrand-Name: '.$this->cobrandName,
-            'Authorization: Bearer '.$this->generateJwtToken($this->adminLoginId),
+            'Cobrand-Name: ' . $this->cobrandName,
+            'Authorization: Bearer ' . $this->generateGenericJwtToken(),
             'Content-Type: application/json',
         ];
 
@@ -353,7 +392,7 @@ class YodleeApi implements BankingProvider
 
         ray(json_decode($result));
 
-        return $result;
+        return json_decode($result);
     }
 
     public function user()

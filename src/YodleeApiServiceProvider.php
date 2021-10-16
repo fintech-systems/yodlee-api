@@ -4,6 +4,7 @@ namespace FintechSystems\YodleeApi;
 
 use FintechSystems\YodleeApi\Commands\AccountsCommand;
 use FintechSystems\YodleeApi\Commands\ApiKeyCommand;
+use FintechSystems\YodleeApi\Commands\DeleteUserCommand;
 use FintechSystems\YodleeApi\Commands\ProviderAccountsCommand;
 use FintechSystems\YodleeApi\Commands\ProvidersCommand;
 use FintechSystems\YodleeApi\Commands\RegisterUserCommand;
@@ -22,6 +23,7 @@ class YodleeApiServiceProvider extends ServiceProvider
             $this->commands([
                 AccountsCommand::class,
                 ApiKeyCommand::class,
+                DeleteUserCommand::class,
                 ProvidersCommand::class,
                 ProviderAccountsCommand::class,
                 RegisterUserCommand::class,

@@ -32,7 +32,8 @@ class ApiTest extends Setup
 
         ray($token);
 
-        $this->assertEquals(528, strlen($token));
+        // $this->assertEquals(528, strlen($token));
+        $this->assertEquals(522, strlen($token));
     }
 
     /**
@@ -110,6 +111,6 @@ class ApiTest extends Setup
 
         $result = $yodlee->getAccounts();
 
-        $this->assertEquals(9, count($result->account));
+        $this->assertEquals(4, count($result->account));
     }
 }
