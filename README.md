@@ -3,9 +3,17 @@
 
 *THIS IS PROTOTYPE AND ALPHA SOFTWARE** BE CAREFULL
 
-Installation
-------------
-`composer require fintech-systems/yodlee-php-api`
+## Installation
+
+You can install the package via composer:
+
+```bash
+composer require fintech-systems/yodlee-php-api
+```
+
+## Changelog
+
+Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
 Laravel Specific Config
 -----------------------
@@ -58,10 +66,11 @@ Provider Accounts
 yodlee:accounts                       Retrieve a list of Yodlee accounts
 yodlee:api-key                        Retrieve a list of Yodlee API keys
 yodlee:delete-user                    Delete a Yodlee user
-yodlee:get-user                       Retrieve Yodlee user
+yodlee:get-user                       Retrieve details about a Yodlee user
 yodlee:provider-accounts              Retrieve a list of Yodlee provider accounts
 yodlee:providers                      Retrieve a list of Yodlee providers
 yodlee:register-user                  Register a new Yodlee user
+yodlee:transactions                   Retrieve a list of Yodlee transactions for a user
 ```
 
 Testing Fastlink
