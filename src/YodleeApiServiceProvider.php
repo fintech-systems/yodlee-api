@@ -5,10 +5,10 @@ namespace FintechSystems\YodleeApi;
 use FintechSystems\YodleeApi\Commands\AccountsCommand;
 use FintechSystems\YodleeApi\Commands\ApiKeyCommand;
 use FintechSystems\YodleeApi\Commands\DeleteUserCommand;
+use FintechSystems\YodleeApi\Commands\GetUserCommand;
 use FintechSystems\YodleeApi\Commands\ProviderAccountsCommand;
 use FintechSystems\YodleeApi\Commands\ProvidersCommand;
 use FintechSystems\YodleeApi\Commands\RegisterUserCommand;
-use FintechSystems\YodleeApi\Commands\GetUserCommand;
 use FintechSystems\YodleeApi\Commands\TransactionsCommand;
 use Illuminate\Support\ServiceProvider;
 
@@ -29,7 +29,7 @@ class YodleeApiServiceProvider extends ServiceProvider
                 ProvidersCommand::class,
                 ProviderAccountsCommand::class,
                 RegisterUserCommand::class,
-                TransactionsCommand::class,                
+                TransactionsCommand::class,
             ]);
         }
     }
@@ -43,7 +43,7 @@ class YodleeApiServiceProvider extends ServiceProvider
                 'cobrand_password' => $_ENV['YODLEE_COBRAND_PASSWORD'],
                 'api_url'          => $_ENV['YODLEE_API_URL'],
                 'api_key'          => $_ENV['YODLEE_API_KEY'],
-                'username'         => $_ENV['YODLEE_USERNAME'],                
+                'username'         => $_ENV['YODLEE_USERNAME'],
             ]);
         });
     }
