@@ -33,8 +33,12 @@ php artisan vendor:publish --tag=yodlee-config
 
 - Ensure a private key named private.pem is stored in the root directory of the application.
 
-Security Warning
-================
+## License
+
+The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+
+## Security Warning
+
 
 Storing a private key in public source code repository is a huge security risk.
 Ensure the `.gitignore` file contains at least the following:
