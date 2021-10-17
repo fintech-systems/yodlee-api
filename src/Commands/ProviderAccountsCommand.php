@@ -52,7 +52,7 @@ class ProviderAccountsCommand extends Command
 
         $result = file_put_contents($this->cachedFile, YodleeApi::getProviderAccounts(
             $this->argument('username')
-        ));        
+        ));
         $this->info('The command was successful!');
 
         return $result;
