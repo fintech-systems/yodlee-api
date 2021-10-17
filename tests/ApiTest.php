@@ -106,5 +106,4 @@ class ApiTest extends Setup
 
         $this->assertEmpty('', $result);
     }
-    
 }
