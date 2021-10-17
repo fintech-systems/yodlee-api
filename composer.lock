@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "42dfd4f66d23a0a4ea8e89de0885baf4",
+    "content-hash": "64cb5ccf9fdbbe45d68f29141bc4c8ab",
     "packages": [
         {
             "name": "brick/math",
@@ -447,16 +447,16 @@
         },
         {
             "name": "fintech-systems/laravel-api-helpers",
-            "version": "0.0.2",
+            "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fintech-systems/laravel-api-helpers.git",
-                "reference": "581d10770e7c5fba10bf64b2583d388f806866fa"
+                "reference": "d38b5f568186a44529f83cd632d445b69d778c02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fintech-systems/laravel-api-helpers/zipball/581d10770e7c5fba10bf64b2583d388f806866fa",
-                "reference": "581d10770e7c5fba10bf64b2583d388f806866fa",
+                "url": "https://api.github.com/repos/fintech-systems/laravel-api-helpers/zipball/d38b5f568186a44529f83cd632d445b69d778c02",
+                "reference": "d38b5f568186a44529f83cd632d445b69d778c02",
                 "shasum": ""
             },
             "require": {
@@ -472,6 +472,7 @@
                 "spatie/laravel-ray": "^1.23",
                 "vimeo/psalm": "^4.8"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "laravel": {
@@ -509,7 +510,7 @@
             ],
             "support": {
                 "issues": "https://github.com/fintech-systems/laravel-api-helpers/issues",
-                "source": "https://github.com/fintech-systems/laravel-api-helpers/tree/0.0.2"
+                "source": "https://github.com/fintech-systems/laravel-api-helpers/tree/main"
             },
             "funding": [
                 {
@@ -517,7 +518,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-10-15T18:15:24+00:00"
+            "time": "2021-10-16T11:52:12+00:00"
         },
         {
             "name": "firebase/php-jwt",
@@ -8172,7 +8173,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "fintech-systems/laravel-api-helpers": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

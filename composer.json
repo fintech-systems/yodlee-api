@@ -30,8 +30,5 @@
                 "YodleeApi": "FintechSystems\\YodleeApi\\Facades\\YodleeApi"
             }
         }
-    },
-    "repositories": [
-        
-    ]
+    }
 }
