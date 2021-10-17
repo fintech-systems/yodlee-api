@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "64cb5ccf9fdbbe45d68f29141bc4c8ab",
+    "content-hash": "d49f474b1d8465f959da160ef1c6d21e",
     "packages": [
         {
             "name": "brick/math",
@@ -447,7 +447,7 @@
         },
         {
             "name": "fintech-systems/laravel-api-helpers",
-            "version": "dev-main",
+            "version": "0.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fintech-systems/laravel-api-helpers.git",
@@ -472,7 +472,6 @@
                 "spatie/laravel-ray": "^1.23",
                 "vimeo/psalm": "^4.8"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "laravel": {
@@ -510,7 +509,7 @@
             ],
             "support": {
                 "issues": "https://github.com/fintech-systems/laravel-api-helpers/issues",
-                "source": "https://github.com/fintech-systems/laravel-api-helpers/tree/main"
+                "source": "https://github.com/fintech-systems/laravel-api-helpers/tree/0.0.3"
             },
             "funding": [
                 {
@@ -8173,9 +8172,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "fintech-systems/laravel-api-helpers": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
