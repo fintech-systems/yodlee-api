@@ -7,8 +7,6 @@ use Carbon\Carbon;
 use FintechSystems\LaravelApiHelpers\Api;
 use FintechSystems\YodleeApi\Contracts\BankingProvider;
 use Firebase\JWT\JWT;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 class YodleeApi implements BankingProvider
 {
@@ -29,10 +27,10 @@ class YodleeApi implements BankingProvider
     public function __construct(array $client)
     {
         $this->cobrandName = $client['cobrand_name'];
-        $this->apiUrl      = $client['api_url'];
-        $this->apiKey      = $client['api_key'];        
-        $this->username    = $client['username'];
-        $this->privateKey  = file_get_contents(__DIR__ . '/../' . $this->privateKeyFilename);
+        $this->apiUrl = $client['api_url'];
+        $this->apiKey = $client['api_key'];
+        $this->username = $client['username'];
+        $this->privateKey = file_get_contents(__DIR__.'/../'.$this->privateKeyFilename);
     }
 
     public function apiGet($endpoint, $username = null)
@@ -47,15 +45,15 @@ class YodleeApi implements BankingProvider
         $api = new Api;
 
         $response = $api->get(
-            $this->apiUrl . $endpoint,
+            $this->apiUrl.$endpoint,
             [
                 'Api-Version: 1.1',
-                'Authorization: Bearer ' . $token,
-                'Cobrand-Name: ' . $this->cobrandName,
+                'Authorization: Bearer '.$token,
+                'Cobrand-Name: '.$this->cobrandName,
                 'Content-Type: application/json',
             ]
         );
-    
+
         ray(json_decode($response));
 
         return $response;
@@ -70,12 +68,12 @@ class YodleeApi implements BankingProvider
      */
     public function deleteUser($loginName)
     {
-        $url = $this->apiUrl . 'user/unregister';
+        $url = $this->apiUrl.'user/unregister';
 
         $header = [
             'Api-Version: 1.1',
-            'Authorization: Bearer ' . $this->generateJwtToken($loginName),
-            'Cobrand-Name: ' . $this->cobrandName,            
+            'Authorization: Bearer '.$this->generateJwtToken($loginName),
+            'Cobrand-Name: '.$this->cobrandName,
             'Content-Type: application/json',
         ];
 
@@ -102,12 +100,12 @@ class YodleeApi implements BankingProvider
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => '{
-        		"publicKey": "' . $publicKey . '"
+        		"publicKey": "'.$publicKey.'"
   			}',
             CURLOPT_HTTPHEADER => [
                 'Api-Version: 1.1',
-                'Authorization: cobSession=' . $cobrandArray['cobSession'],
-                'Cobrand-Name: ' . $cobrandArray['cobrandName'],
+                'Authorization: cobSession='.$cobrandArray['cobSession'],
+                'Cobrand-Name: '.$cobrandArray['cobrandName'],
                 'Content-Type: application/json',
             ],
         ]);
@@ -123,7 +121,7 @@ class YodleeApi implements BankingProvider
     }
 
     /**
-     * Generic tokens are used for global API calls that does not pertain to a user
+     * Generic tokens are used for global API calls that does not pertain to a user.
      */
     public function generateGenericJwtToken()
     {
@@ -176,13 +174,13 @@ class YodleeApi implements BankingProvider
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => '{
         		"cobrand":      {
-					"cobrandLogin": "' . $cobrandArray['cobrandLogin'] . '",
-					"cobrandPassword": "' . $cobrandArray['cobrandPassword'] . '"
+					"cobrandLogin": "'.$cobrandArray['cobrandLogin'].'",
+					"cobrandPassword": "'.$cobrandArray['cobrandPassword'].'"
          		}
     		}',
             CURLOPT_HTTPHEADER => [
                 'Api-Version: 1.1',
-                'Cobrand-Name: ' . $cobrandArray['cobrandName'],
+                'Cobrand-Name: '.$cobrandArray['cobrandName'],
                 'Content-Type: application/json',
                 'Cookie: JSESSIONID=xxx', // REDACTED TODO Research
             ],
@@ -220,10 +218,10 @@ class YodleeApi implements BankingProvider
     {
         return $this->apiGet("providers?priority=$priority&countryISOCode=ZA");
     }
-    
+
     /**
-     * Get all transactions for the last 30 days
-     * 
+     * Get all transactions for the last 30 days.
+     *
      * https://developer.yodlee.com/api-reference/aggregation#operation/getTransactions
      */
     public function getTransactions($username, $fromDate = null)
@@ -238,8 +236,8 @@ class YodleeApi implements BankingProvider
     }
 
     /**
-     * Get transactions for the last 90 days for a specific account only
-     * 
+     * Get transactions for the last 90 days for a specific account only.
+     *
      * https://developer.yodlee.com/api-reference/aggregation#operation/getTransactions
      */
     public function getTransactionsByAccount($username, $accountId, $fromDate = null)
@@ -252,7 +250,7 @@ class YodleeApi implements BankingProvider
 
         return $this->apiGet($url, $username);
     }
-            
+
     /**
      * Add a new user (consumer) to the system.
      *
@@ -263,8 +261,8 @@ class YodleeApi implements BankingProvider
         $postFields = '
         {
             "user": {
-              "loginName":"' . $loginName . '",              
-              "email": "' . $email . '",
+              "loginName":"'.$loginName.'",              
+              "email": "'.$email.'",
               "preferences": {                
                 "currency": "ZAR",
                 "timeZone": "GMT+2",
@@ -274,13 +272,13 @@ class YodleeApi implements BankingProvider
             }
           }
         ';
-        
-        $url = $this->apiUrl . 'user/register';
+
+        $url = $this->apiUrl.'user/register';
 
         $header = [
             'Api-Version: 1.1',
-            'Cobrand-Name: ' . $this->cobrandName,
-            'Authorization: Bearer ' . $this->generateGenericJwtToken(),
+            'Cobrand-Name: '.$this->cobrandName,
+            'Authorization: Bearer '.$this->generateGenericJwtToken(),
             'Content-Type: application/json',
         ];
 
@@ -294,12 +292,12 @@ class YodleeApi implements BankingProvider
     }
 
     /**
-     * getUser
-     * 
+     * getUser.
+     *
      * https://developer.yodlee.com/api-reference#operation/getUser
      */
     public function getUser($username)
-    {        
+    {
         return $this->apiGet('user', $username);
     }
 }
