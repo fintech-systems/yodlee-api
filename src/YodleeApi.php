@@ -37,7 +37,7 @@ class YodleeApi implements BankingProvider
 
     public function apiGet($endpoint, $username = null)
     {
-        if ($username == null) {            
+        if ($username == null) {
             $token = $this->generateJwtToken($this->username);
         } else {
             $token = $this->generateJwtToken($username);
@@ -63,10 +63,10 @@ class YodleeApi implements BankingProvider
     }
 
     /**
-     * Delete a user (Yodlee consumer)
-     * 
+     * Delete a user (Yodlee consumer).
+     *
      * On success this method returns an empty string but on the CURL request is generates a 204 (Success without content)
-     * 
+     *
      * https://developer.yodlee.com/api-reference/aggregation#operation/userLogout
      */
     public function deleteUser($loginName)
@@ -83,7 +83,7 @@ class YodleeApi implements BankingProvider
         $api = new Api;
 
         $result = $api->delete($url, $header);
-                
+
         return $result;
     }
 
@@ -145,9 +145,9 @@ class YodleeApi implements BankingProvider
 
         return JWT::encode($payload, $this->privateKey, 'RS512');
     }
-    
+
     /**
-     * Get all accounts of a user held at providers, e.g. all their bank accounts
+     * Get all accounts of a user held at providers, e.g. all their bank accounts.
      */
     public function getAccounts($user = null)
     {
@@ -199,9 +199,9 @@ class YodleeApi implements BankingProvider
 
     /**
      * Get a list of provider accounts added by the user.
-     * 
+     *
      * This includes the failed and successfully added provider accounts.
-     * 
+     *
      * https://developer.yodlee.com/api-reference/aggregation#tag/ProviderAccounts
      */
     public function getProviderAccounts()
@@ -210,8 +210,8 @@ class YodleeApi implements BankingProvider
     }
 
     /**
-     * Get a list of every all the providers that have been added by Yodlee
-     * 
+     * Get a list of every all the providers that have been added by Yodlee.
+     *
      * https://developer.yodlee.com/api-reference/aggregation#tag/Providers
      */
     public function getProviders($priority = 'cobrand')
@@ -231,7 +231,7 @@ class YodleeApi implements BankingProvider
     // }
 
     public function getTransactions($user)
-    {        
+    {
         return $this->apiGet('transactions', $user);
     }
 
@@ -248,7 +248,7 @@ class YodleeApi implements BankingProvider
     {
         $accounts = $this->getAccounts();
 
-        Storage::put($this->storagePath.'accounts.json', json_encode($accounts));        
+        Storage::put($this->storagePath.'accounts.json', json_encode($accounts));
     }
 
     /**
@@ -293,8 +293,8 @@ class YodleeApi implements BankingProvider
     }
 
     /**
-     * Add a new user (consumer) to the system
-     * 
+     * Add a new user (consumer) to the system.
+     *
      * https://developer.yodlee.com/api-reference/aggregation#operation/registerUser
      */
     public function registerUser($loginName, $email)

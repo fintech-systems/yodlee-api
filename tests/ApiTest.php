@@ -25,7 +25,7 @@ class ApiTest extends Setup
         $yodlee = new YodleeApi($this->getClient());
 
         $token = $yodlee->generateGenericJWTToken();
-                
+
         $this->assertGreaterThan(498, strlen($token));
     }
 
@@ -50,7 +50,7 @@ class ApiTest extends Setup
      *    "The maximum number of apiKey permitted is 5"
      */
     public function trying_to_generate_a_sixth_key_using_public_key_produces_an_error()
-    {        
+    {
         $client = $this->getClient();
 
         $yodlee = new YodleeApi($client);
@@ -88,16 +88,18 @@ class ApiTest extends Setup
     }
 
     /** @test */
-    public function it_can_register_a_new_user() {        
+    public function it_can_register_a_new_user()
+    {
         $yodlee = new YodleeApi($this->getClient());
 
         $result = $yodlee->registerUser('test-user', 'test@example.com');
-        
+
         $this->assertObjectHasAttribute('id', $result->user);
     }
 
     /** @test */
-    public function it_can_delete_a_user() {
+    public function it_can_delete_a_user()
+    {
         $yodlee = new YodleeApi($this->getClient());
 
         $result = $yodlee->deleteUser('test-user');
@@ -105,15 +107,13 @@ class ApiTest extends Setup
         $this->assertEmpty('', $result);
     }
 
-    /** 
-     * 
-     * Test disabled because the .env 'default-user' doesn't have any accounts linked
-     * 
-     * @test 
-     * 
+    /**
+     * Test disabled because the .env 'default-user' doesn't have any accounts linked.
+     *
+     * @test
      */
     // public function it_can_retrieve_the_total_number_of_yodlee_accounts()
-    // {                
+    // {
     //     $yodlee = new YodleeApi($this->getClient());
 
     //     $result = $yodlee->getAccounts();
