@@ -47,7 +47,7 @@ class TransactionsCommand extends LaravelApiHelpersCommand
             return $file;
         }
 
-        $result = file_put_contents($this->cachedFile, YodleeApi::getTransactions2(
+        $result = file_put_contents($this->cachedFile, YodleeApi::getTransactions(
             $this->argument('username')
         ));
 

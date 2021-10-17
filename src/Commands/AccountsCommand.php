@@ -47,9 +47,10 @@ class AccountsCommand extends LaravelApiHelpersCommand
             return $file;
         }
 
-        $result = file_put_contents($this->cachedFile, YodleeApi::getAccounts2(
+        $result = file_put_contents($this->cachedFile, YodleeApi::getAccounts(
             $this->argument('username')
         ));
+
         $this->info('The API command was successful');
 
         return $result;

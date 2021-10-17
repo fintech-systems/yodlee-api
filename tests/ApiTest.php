@@ -106,18 +106,5 @@ class ApiTest extends Setup
 
         $this->assertEmpty('', $result);
     }
-
-    /**
-     * Test disabled because the .env 'default-user' doesn't have any accounts linked.
-     *
-     * @test
-     */
-    // public function it_can_retrieve_the_total_number_of_yodlee_accounts()
-    // {
-    //     $yodlee = new YodleeApi($this->getClient());
-
-    //     $result = $yodlee->getAccounts();
-
-    //     $this->assertEquals(4, count($result->account));
-    // }
+    
 }

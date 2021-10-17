@@ -2,6 +2,10 @@
 
 All notable changes to `yodlee-php-api` will be documented in this file.
 
+## 0.0.5 - 2021-10-17
+
+- refactor and cleanup, remove more legacy methods especially for accounts and transactions
+
 ## 0.0.4 - 2021-10-17
 
 - fix problem whereby get provider accounts didn't take a username
