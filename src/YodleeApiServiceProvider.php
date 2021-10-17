@@ -38,12 +38,12 @@ class YodleeApiServiceProvider extends ServiceProvider
     {
         $this->app->bind('yodlee-api', function () {
             return new YodleeApi([
-                'cobrand_name'     => $_ENV['YODLEE_COBRAND_NAME'],
-                'cobrand_login'    => $_ENV['YODLEE_COBRAND_LOGIN'],
-                'cobrand_password' => $_ENV['YODLEE_COBRAND_PASSWORD'],
-                'api_url'          => $_ENV['YODLEE_API_URL'],
-                'api_key'          => $_ENV['YODLEE_API_KEY'],
-                'username'         => $_ENV['YODLEE_USERNAME'],
+                'cobrand_name'     => config('yodlee.cobrand_name'),
+                'cobrand_login'    => config('yodlee.cobrand_login'),
+                'cobrand_password' => config('yodlee.cobrand_password'),
+                'api_url'          => config('yodlee.api_url'),
+                'api_key'          => config('yodlee.api_key'),
+                'username'         => config('yodlee.username'),
             ]);
         });
     }
