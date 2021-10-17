@@ -2,6 +2,10 @@
 
 All notable changes to `yodlee-php-api` will be documented in this file.
 
+## 0.0.4 - 2021-10-17
+
+- fix problem whereby get provider accounts didn't take a username
+
 ## 0.0.3 - 2021-10-17
 
 - added new tests to register and delete users

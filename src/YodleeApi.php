@@ -204,9 +204,9 @@ class YodleeApi implements BankingProvider
      *
      * https://developer.yodlee.com/api-reference/aggregation#tag/ProviderAccounts
      */
-    public function getProviderAccounts()
+    public function getProviderAccounts($username)
     {
-        return $this->apiGet('providerAccounts');
+        return $this->apiGet('providerAccounts', $username);
     }
 
     /**
@@ -230,9 +230,9 @@ class YodleeApi implements BankingProvider
     //     return json_decode($this->apiGet('transactions?fromDate=2020-08-01'));
     // }
 
-    public function getTransactions($user)
+    public function getTransactions($username)
     {
-        return $this->apiGet('transactions', $user);
+        return $this->apiGet('transactions', $username);
     }
 
     private function getTransactionsByAccount($accountId, $fromDate = null)

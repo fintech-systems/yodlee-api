@@ -12,7 +12,7 @@ class ProviderAccountsCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'yodlee:provider-accounts {--cached}';
+    protected $signature = 'yodlee:provider-accounts {username} {--cached}';
 
     /**
      * The console command description.
@@ -50,7 +50,9 @@ class ProviderAccountsCommand extends Command
             return file_get_contents($this->cachedFile);
         }
 
-        $result = file_put_contents($this->cachedFile, YodleeApi::getProviderAccounts());
+        $result = file_put_contents($this->cachedFile, YodleeApi::getProviderAccounts(
+            $this->argument('username')
+        ));        
         $this->info('The command was successful!');
 
         return $result;

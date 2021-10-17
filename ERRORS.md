@@ -90,3 +90,9 @@ Where encountered
 After making changes with signatures and refactoring old code the tests broken down
 
 The problem was actually using Log:: in this standalone package - removed it.
+
+---
+
+Call to a member function tap() on null
+
+Forget to return from $this->hasMany? Must be return $this->hasMany!
