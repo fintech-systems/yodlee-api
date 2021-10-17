@@ -37,8 +37,7 @@ class YodleeApi implements BankingProvider
 
     public function apiGet($endpoint, $username = null)
     {
-        if ($username == null) {
-            Log::warning("No username was specified so generating a token for $this->username");
+        if ($username == null) {            
             $token = $this->generateJwtToken($this->username);
         } else {
             $token = $this->generateJwtToken($username);
@@ -56,11 +55,20 @@ class YodleeApi implements BankingProvider
             ]
         );
 
+        ray($response);
+
         ray(json_decode($response));
 
         return $response;
     }
 
+    /**
+     * Delete a user (Yodlee consumer)
+     * 
+     * On success this method returns an empty string but on the CURL request is generates a 204 (Success without content)
+     * 
+     * https://developer.yodlee.com/api-reference/aggregation#operation/userLogout
+     */
     public function deleteUser($loginName)
     {
         $url = $this->apiUrl.'user/unregister';
@@ -75,13 +83,7 @@ class YodleeApi implements BankingProvider
         $api = new Api;
 
         $result = $api->delete($url, $header);
-
-        ray('Outputting the result of a Yodlee delete command');
-
-        ray($result);
-
-        ray(json_decode($result));
-
+                
         return $result;
     }
 
@@ -143,21 +145,13 @@ class YodleeApi implements BankingProvider
 
         return JWT::encode($payload, $this->privateKey, 'RS512');
     }
-
+    
     /**
-     * Original getAccounts() method that includes json decoding.
+     * Get all accounts of a user held at providers, e.g. all their bank accounts
      */
-    public function getAccounts()
+    public function getAccounts($user = null)
     {
-        return json_decode($this->apiGet('accounts'));
-    }
-
-    /**
-     * New GetAccounts API that retrieves accounts without json encoding.
-     */
-    public function getAccounts2($loginName)
-    {
-        return $this->apiGet('accounts', $loginName);
+        return $this->apiGet('accounts', $user);
     }
 
     public function getApiKeys()
@@ -203,13 +197,22 @@ class YodleeApi implements BankingProvider
         return $object->session->cobSession;
     }
 
+    /**
+     * Get a list of provider accounts added by the user.
+     * 
+     * This includes the failed and successfully added provider accounts.
+     * 
+     * https://developer.yodlee.com/api-reference/aggregation#tag/ProviderAccounts
+     */
     public function getProviderAccounts()
     {
         return $this->apiGet('providerAccounts');
     }
 
     /**
-     * Get a list of providers.
+     * Get a list of every all the providers that have been added by Yodlee
+     * 
+     * https://developer.yodlee.com/api-reference/aggregation#tag/Providers
      */
     public function getProviders($priority = 'cobrand')
     {
@@ -222,15 +225,14 @@ class YodleeApi implements BankingProvider
      * 1. json decoding happening too quickly
      * 2. fromDate hardcoded
      */
-    private function getTransactions()
-    {
-        return json_decode($this->apiGet('transactions?fromDate=2020-08-01'));
-    }
+    // private function getTransactions()
+    // {
+    //     return json_decode($this->apiGet('transactions?fromDate=2020-08-01'));
+    // }
 
-    public function getTransactions2($loginName)
-    {
-        // return $this->apiGet('transactions?fromDate=2021-10-01', $loginName);
-        return $this->apiGet('transactions', $loginName);
+    public function getTransactions($user)
+    {        
+        return $this->apiGet('transactions', $user);
     }
 
     private function getTransactionsByAccount($accountId, $fromDate = null)
@@ -246,15 +248,7 @@ class YodleeApi implements BankingProvider
     {
         $accounts = $this->getAccounts();
 
-        Storage::put($this->storagePath.'accounts.json', json_encode($accounts));
-
-        $message = 'Retrieved '.count($accounts->account).' accounts';
-
-        Log::info($message);
-
-        echo $message;
-
-        ray($message)->green();
+        Storage::put($this->storagePath.'accounts.json', json_encode($accounts));        
     }
 
     /**
@@ -298,6 +292,11 @@ class YodleeApi implements BankingProvider
         ray($message)->green();
     }
 
+    /**
+     * Add a new user (consumer) to the system
+     * 
+     * https://developer.yodlee.com/api-reference/aggregation#operation/registerUser
+     */
     public function registerUser($loginName, $email)
     {
         $postFields = '

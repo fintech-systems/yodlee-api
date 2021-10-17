@@ -212,3 +212,12 @@ Where encountered
 
 Trying to create a new user after having deleted the main user
 
+---
+
+RuntimeException: A facade root has not been set.
+
+Where encountered
+
+After making changes with signatures and refactoring old code the tests broken down
+
+The problem was actually using Log:: in this standalone package - removed it.

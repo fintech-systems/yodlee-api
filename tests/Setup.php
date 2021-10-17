@@ -20,14 +20,15 @@ class Setup extends TestCase
      */
     protected function getClient()
     {
+        $this->init();
+        
         return [
             'cobrand_name'     => $_ENV['YODLEE_COBRAND_NAME'],
             'cobrand_login'    => $_ENV['YODLEE_COBRAND_LOGIN'],
             'cobrand_password' => $_ENV['YODLEE_COBRAND_PASSWORD'],
             'api_url'          => $_ENV['YODLEE_API_URL'],
             'api_key'          => $_ENV['YODLEE_API_KEY'],
-            'username'         => $_ENV['YODLEE_USERNAME'],
-            'admin_login_id'   => $_ENV['YODLEE_ADMIN_LOGIN_ID'],
+            'username'         => $_ENV['YODLEE_USERNAME'],            
         ];
     }
 }

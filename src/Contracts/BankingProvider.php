@@ -4,5 +4,5 @@ namespace FintechSystems\YodleeApi\Contracts;
 
 interface BankingProvider
 {
-    public function getAccounts();
+    public function getAccounts(String $user);
 }

@@ -22,18 +22,11 @@ class ApiTest extends Setup
     /** @test */
     public function it_can_generate_a_jwt_token()
     {
-        $this->init();
+        $yodlee = new YodleeApi($this->getClient());
 
-        $client = $this->getClient();
-
-        $yodlee = new YodleeApi($client);
-
-        $token = $yodlee->generateJWTToken();
-
-        ray($token);
-
-        // $this->assertEquals(528, strlen($token));
-        $this->assertEquals(522, strlen($token));
+        $token = $yodlee->generateGenericJWTToken();
+                
+        $this->assertGreaterThan(498, strlen($token));
     }
 
     /**
@@ -41,11 +34,7 @@ class ApiTest extends Setup
      */
     public function api_keys_can_be_retrieved()
     {
-        $this->init();
-
-        $client = $this->getClient();
-
-        $yodlee = new YodleeApi($client);
+        $yodlee = new YodleeApi($this->getClient());
 
         $result = $yodlee->apiGet('auth/apiKey');
 
@@ -61,9 +50,7 @@ class ApiTest extends Setup
      *    "The maximum number of apiKey permitted is 5"
      */
     public function trying_to_generate_a_sixth_key_using_public_key_produces_an_error()
-    {
-        $this->init();
-
+    {        
         $client = $this->getClient();
 
         $yodlee = new YodleeApi($client);
@@ -101,16 +88,36 @@ class ApiTest extends Setup
     }
 
     /** @test */
-    public function it_can_retrieve_the_total_number_of_yodlee_accounts()
-    {
-        $this->init();
+    public function it_can_register_a_new_user() {        
+        $yodlee = new YodleeApi($this->getClient());
 
-        $client = $this->getClient();
-
-        $yodlee = new YodleeApi($client);
-
-        $result = $yodlee->getAccounts();
-
-        $this->assertEquals(4, count($result->account));
+        $result = $yodlee->registerUser('test-user', 'test@example.com');
+        
+        $this->assertObjectHasAttribute('id', $result->user);
     }
+
+    /** @test */
+    public function it_can_delete_a_user() {
+        $yodlee = new YodleeApi($this->getClient());
+
+        $result = $yodlee->deleteUser('test-user');
+
+        $this->assertEmpty('', $result);
+    }
+
+    /** 
+     * 
+     * Test disabled because the .env 'default-user' doesn't have any accounts linked
+     * 
+     * @test 
+     * 
+     */
+    // public function it_can_retrieve_the_total_number_of_yodlee_accounts()
+    // {                
+    //     $yodlee = new YodleeApi($this->getClient());
+
+    //     $result = $yodlee->getAccounts();
+
+    //     $this->assertEquals(4, count($result->account));
+    // }
 }
