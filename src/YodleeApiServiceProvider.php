@@ -43,7 +43,7 @@ class YodleeApiServiceProvider extends ServiceProvider
                 'cobrand_password' => config('yodlee.cobrand_password'),
                 'api_url'          => config('yodlee.api_url'),
                 'api_key'          => config('yodlee.api_key'),
-                'username'         => config('yodlee.username'),
+                'username'         => config('yodlee.username'),                
             ]);
         });
     }

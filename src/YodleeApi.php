@@ -30,8 +30,13 @@ class YodleeApi implements BankingProvider
         $this->apiUrl = $client['api_url'];
         $this->apiKey = $client['api_key'];
         $this->username = $client['username'];
-        $this->privateKey = file_get_contents(getcwd()
-            .$this->privateKeyStoragePath.$this->privateKeyFilename
+
+        $cwd = str_replace('/public', '', getcwd());
+
+        $this->privateKey = file_get_contents(
+            $cwd
+                . $this->privateKeyStoragePath
+                . $this->privateKeyFilename
         );
     }
 
@@ -47,11 +52,11 @@ class YodleeApi implements BankingProvider
         $api = new Api;
 
         $response = $api->get(
-            $this->apiUrl.$endpoint,
+            $this->apiUrl . $endpoint,
             [
                 'Api-Version: 1.1',
-                'Authorization: Bearer '.$token,
-                'Cobrand-Name: '.$this->cobrandName,
+                'Authorization: Bearer ' . $token,
+                'Cobrand-Name: ' . $this->cobrandName,
                 'Content-Type: application/json',
             ]
         );
@@ -70,12 +75,12 @@ class YodleeApi implements BankingProvider
      */
     public function deleteUser($loginName)
     {
-        $url = $this->apiUrl.'user/unregister';
+        $url = $this->apiUrl . 'user/unregister';
 
         $header = [
             'Api-Version: 1.1',
-            'Authorization: Bearer '.$this->generateJwtToken($loginName),
-            'Cobrand-Name: '.$this->cobrandName,
+            'Authorization: Bearer ' . $this->generateJwtToken($loginName),
+            'Cobrand-Name: ' . $this->cobrandName,
             'Content-Type: application/json',
         ];
 
@@ -102,12 +107,12 @@ class YodleeApi implements BankingProvider
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => '{
-        		"publicKey": "'.$publicKey.'"
+        		"publicKey": "' . $publicKey . '"
   			}',
             CURLOPT_HTTPHEADER => [
                 'Api-Version: 1.1',
-                'Authorization: cobSession='.$cobrandArray['cobSession'],
-                'Cobrand-Name: '.$cobrandArray['cobrandName'],
+                'Authorization: cobSession=' . $cobrandArray['cobSession'],
+                'Cobrand-Name: ' . $cobrandArray['cobrandName'],
                 'Content-Type: application/json',
             ],
         ]);
@@ -176,13 +181,13 @@ class YodleeApi implements BankingProvider
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => '{
         		"cobrand":      {
-					"cobrandLogin": "'.$cobrandArray['cobrandLogin'].'",
-					"cobrandPassword": "'.$cobrandArray['cobrandPassword'].'"
+					"cobrandLogin": "' . $cobrandArray['cobrandLogin'] . '",
+					"cobrandPassword": "' . $cobrandArray['cobrandPassword'] . '"
          		}
     		}',
             CURLOPT_HTTPHEADER => [
                 'Api-Version: 1.1',
-                'Cobrand-Name: '.$cobrandArray['cobrandName'],
+                'Cobrand-Name: ' . $cobrandArray['cobrandName'],
                 'Content-Type: application/json',
                 'Cookie: JSESSIONID=xxx', // REDACTED TODO Research
             ],
@@ -263,8 +268,8 @@ class YodleeApi implements BankingProvider
         $postFields = '
         {
             "user": {
-              "loginName":"'.$loginName.'",              
-              "email": "'.$email.'",
+              "loginName":"' . $loginName . '",              
+              "email": "' . $email . '",
               "preferences": {                
                 "currency": "ZAR",
                 "timeZone": "GMT+2",
@@ -275,12 +280,12 @@ class YodleeApi implements BankingProvider
           }
         ';
 
-        $url = $this->apiUrl.'user/register';
+        $url = $this->apiUrl . 'user/register';
 
         $header = [
             'Api-Version: 1.1',
-            'Cobrand-Name: '.$this->cobrandName,
-            'Authorization: Bearer '.$this->generateGenericJwtToken(),
+            'Cobrand-Name: ' . $this->cobrandName,
+            'Authorization: Bearer ' . $this->generateGenericJwtToken(),
             'Content-Type: application/json',
         ];
 

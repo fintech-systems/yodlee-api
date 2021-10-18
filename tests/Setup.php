@@ -28,7 +28,7 @@ class Setup extends TestCase
             'cobrand_password' => $_ENV['YODLEE_COBRAND_PASSWORD'],
             'api_url'          => $_ENV['YODLEE_API_URL'],
             'api_key'          => $_ENV['YODLEE_API_KEY'],
-            'username'         => $_ENV['YODLEE_USERNAME'],
+            'username'         => $_ENV['YODLEE_USERNAME'],            
         ];
     }
 }
