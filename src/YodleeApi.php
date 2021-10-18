@@ -10,9 +10,9 @@ use Firebase\JWT\JWT;
 
 class YodleeApi implements BankingProvider
 {
-    public $storagePath = '/yodlee/';
+    private $privateKeyStoragePath = '/../storage/';
 
-    private $privateKeyFilename = 'private.pem';
+    private $privateKeyFilename = 'private.pem.key';
 
     private $privateKey;
 
@@ -30,7 +30,9 @@ class YodleeApi implements BankingProvider
         $this->apiUrl = $client['api_url'];
         $this->apiKey = $client['api_key'];
         $this->username = $client['username'];
-        $this->privateKey = file_get_contents(__DIR__.'/../'.$this->privateKeyFilename);
+        $this->privateKey = file_get_contents(getcwd()
+            .$this->privateKeyStoragePath.$this->privateKeyFilename
+        );
     }
 
     public function apiGet($endpoint, $username = null)
