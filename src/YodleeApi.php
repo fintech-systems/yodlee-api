@@ -10,7 +10,7 @@ use Firebase\JWT\JWT;
 
 class YodleeApi implements BankingProvider
 {
-    private $privateKeyStoragePath = '/../storage/';
+    private $privateKeyStoragePath = '/storage/';
 
     private $privateKeyFilename = 'private.pem.key';
 
