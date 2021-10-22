@@ -2,6 +2,14 @@
 
 All notable changes to `yodlee-php-api` will be documented in this file.
 
+## 0.0.11 - 2021-10-22
+
+- changed default for GetTransactions from 30 to 90 days
+
+## 0.0.6 - 0.0.10
+
+- various storage issues with private key and finding it standalone versus when using Laravel
+
 ## 0.0.5 - 2021-10-17
 
 - refactor and cleanup, remove more legacy methods especially for accounts and transactions
