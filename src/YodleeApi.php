@@ -227,14 +227,14 @@ class YodleeApi implements BankingProvider
     }
 
     /**
-     * Get all transactions for the last 30 days.
+     * Get all transactions for the last 90 days.
      *
      * https://developer.yodlee.com/api-reference/aggregation#operation/getTransactions
      */
     public function getTransactions($username, $fromDate = null)
     {
         $fromDate == null
-            ? $fromDate = Carbon::now()->subDays(30)->format('Y-m-d')
+            ? $fromDate = Carbon::now()->subDays(90)->format('Y-m-d')
             : $fromDate = $fromDate;
 
         $url = "transactions?fromDate=$fromDate";
