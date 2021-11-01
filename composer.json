@@ -2,7 +2,7 @@
     "name": "fintech-systems/yodlee-php-api",
     "require": {
         "phpseclib/phpseclib": "^3.0.10",
-        "fintech-systems/laravel-api-helpers": "^0.0.3",
+        "fintech-systems/laravel-api-helpers": "^0.1.4",
         "firebase/php-jwt": "^5.0",        
         "vlucas/phpdotenv": "^5.3",
         "spatie/ray": "^1.30"
