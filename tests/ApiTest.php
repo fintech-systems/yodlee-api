@@ -111,16 +111,17 @@ class ApiTest extends Setup
         $this->assertNull($result);
     }
 
-    /** 
-     * @test 
-     * 
+    /**
+     * @test
+     *
      * Get All Users Test
-     * 
+     *
      * There is no API call to get all users but this probably exists in the front-end
      * but through trial and error we found that calling getUser returns the first
      * user, but when you specify the name you will get other users.
      */
-    public function it_can_get_all_users() {
+    public function it_can_get_all_users()
+    {
         $yodlee = new YodleeApi($this->getClient());
 
         $result = $yodlee->getAllUsers();
