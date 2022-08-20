@@ -22,9 +22,13 @@ class ApiTest extends Setup
     /** @test */
     public function it_can_generate_a_jwt_token()
     {
-        $yodlee = new YodleeApi($this->getClient());
+        $env = $this->getClient();
+
+        $yodlee = new YodleeApi($env);
 
         $token = $yodlee->generateGenericJWTToken();
+
+        // dd($token);
 
         $this->assertGreaterThan(498, strlen($token));
     }
@@ -46,7 +50,7 @@ class ApiTest extends Setup
     /**
      * @test
      *
-     * FYI you cannot generate more than 5 API keys otherwise you get this:
+     * Test you cannot generate more than 5 API keys otherwise you get this:
      *    "The maximum number of apiKey permitted is 5"
      */
     public function trying_to_generate_a_sixth_key_using_public_key_produces_an_error()
@@ -74,7 +78,7 @@ class ApiTest extends Setup
 
         ray($apiKeyUrl);
 
-        $publicKey = file_get_contents('public.pem');
+        $publicKey = file_get_contents('storage/public.pem');
 
         $key = $yodlee->generateAPIKey(
             $apiKeyUrl,
@@ -98,12 +102,29 @@ class ApiTest extends Setup
     }
 
     /** @test */
-    public function it_can_delete_a_user()
+    public function it_can_unregister_a_user()
     {
         $yodlee = new YodleeApi($this->getClient());
 
-        $result = $yodlee->deleteUser('test-user');
+        $result = $yodlee->unregisterUser('test-user');
 
-        $this->assertEmpty('', $result);
+        $this->assertNull($result);
+    }
+
+    /** 
+     * @test 
+     * 
+     * Get All Users Test
+     * 
+     * There is no API call to get all users but this probably exists in the front-end
+     * but through trial and error we found that calling getUser returns the first
+     * user, but when you specify the name you will get other users.
+     */
+    public function it_can_get_all_users() {
+        $yodlee = new YodleeApi($this->getClient());
+
+        $result = $yodlee->getAllUsers();
+
+        $this->assertObjectHasAttribute('user', json_decode($result));
     }
 }

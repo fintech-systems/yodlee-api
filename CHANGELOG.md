@@ -2,6 +2,16 @@
 
 All notable changes to `yodlee-php-api` will be documented in this file.
 
+## 0.0.13 - 2022-08-20
+
+- Updated tests to use `/storage` and added instructions on read about using this folder
+- Changed all documentation URLs in the API to reflect new #tag location
+- Move order of code around in API so that methods are alphabetical and not often used method are at the bottom
+- General cleanup of comments
+- Additional instructions in readme about installation and testing
+- Updated composer dependencies
+- Added a test to "Get All Users" which only seems to return the first user
+
 ## 0.0.11 - 2021-10-22
 
 - changed default for GetTransactions from 30 to 90 days

@@ -3,15 +3,42 @@
 [![Latest Stable Version](https://poser.pugx.org/fintech-systems/yodlee-php-api/v/stable?format=flat-square)](https://packagist.org/packages/fintech-systems/yodlee-php-api)
 ![GitHub](https://img.shields.io/github/license/fintech-systems/yodlee-php-api)
 
-*THIS IS PROTOTYPE AND ALPHA SOFTWARE** BE CAREFULL
-
 ## Installation
 
-You can install the package via composer:
+### Install the package via composer:
 
 ```bash
 composer require fintech-systems/yodlee-php-api
 ```
+
+### Store private and public keys
+
+Create a directory `/storage` and copy your private key to `/storage/private.pem.key`.
+If you want to run the full testsuite, also copy `public.pem` to `/storage`.
+
+### Set up the environment file
+
+Copy `.env.example` file to `.env` and complete the details.
+
+## Contents of .env
+
+```
+YODLEE_COBRAND_NAME=
+YODLEE_COBRAND_LOGIN=
+YODLEE_COBRAND_PASSWORD=
+YODLEE_API_URL=
+YODLEE_API_KEY=
+YODLEE_USERNAME=
+```
+
+## Testing
+
+Test examples:
+
+`vendor/bin/phpunit`
+`vendor/bin/phpunit --testdox`
+`vendor/bin/phpunit tests/ApiTest.php`
+`vendor/bin/phpunit --filter it_can_generate_a_jwt_token tests/ApiTest.php`
 
 ## Changelog
 
@@ -44,6 +71,7 @@ Storing a private key in public source code repository is a huge security risk.
 Ensure the `.gitignore` file contains at least the following:
 
 ```
+
 *.pem
 *.example.json
 *.cache.json

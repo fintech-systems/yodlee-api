@@ -2,8 +2,8 @@
 
 namespace FintechSystems\YodleeApi;
 
-use App\Models\Account;
 use Carbon\Carbon;
+use Exception;
 use FintechSystems\LaravelApiHelpers\Api;
 use FintechSystems\YodleeApi\Contracts\BankingProvider;
 use Firebase\JWT\JWT;
@@ -35,8 +35,8 @@ class YodleeApi implements BankingProvider
 
         $this->privateKey = file_get_contents(
             $cwd
-                .$this->privateKeyStoragePath
-                .$this->privateKeyFilename
+                . $this->privateKeyStoragePath
+                . $this->privateKeyFilename
         );
     }
 
@@ -49,48 +49,219 @@ class YodleeApi implements BankingProvider
             $token = $this->generateJwtToken($username);
         }
 
-        $api = new Api;
+        $api = new Api();
 
         $response = $api->get(
-            $this->apiUrl.$endpoint,
+            $this->apiUrl . $endpoint,
             [
                 'Api-Version: 1.1',
-                'Authorization: Bearer '.$token,
-                'Cobrand-Name: '.$this->cobrandName,
+                'Authorization: Bearer ' . $token,
+                'Cobrand-Name: ' . $this->cobrandName,
                 'Content-Type: application/json',
             ]
         );
-
-        ray(json_decode($response));
 
         return $response;
     }
 
     /**
-     * Delete a user (Yodlee consumer).
+     * Get all accounts of a user held at the providers, i.e. all their bank accounts.
      *
-     * On success this method returns an empty string but on the CURL request is generates a 204 (Success without content)
+     * https://developer.yodlee.com/api-reference/aggregation#tag/Accounts/operation/getAllAccounts
      *
-     * https://developer.yodlee.com/api-reference/aggregation#operation/userLogout
      */
-    public function deleteUser($loginName)
+    public function getAccounts($user = null)
     {
-        $url = $this->apiUrl.'user/unregister';
+        return $this->apiGet('accounts', $user);
+    }
+
+    /**
+     * This endpoint provides the list of API keys that exist for a customer.
+     *
+     * You can use one of the following authorization methods to access this API:
+     *  - cobsession
+     *  - JWT token
+     *
+     * Not available in developer sandbox environment.
+     *
+     * https://developer.yodlee.com/api-reference/aggregation#tag/Auth/operation/getApiKeys
+     *
+     */
+    public function getApiKeys()
+    {
+        return $this->apiGet('auth/apiKey');
+    }
+
+    /**
+     * Get a list of all the providers (financial institutions) that have been added by Yodlee based on a country code.
+     *
+     * https://developer.yodlee.com/api-reference/aggregation#tag/Providers/operation/getAllProviders
+     *
+     */
+    public function getProviders($priority = 'cobrand', $iso = 'ZA')
+    {
+        return $this->apiGet("providers?priority=$priority&countryISOCode=$iso");
+    }
+
+    /**
+     * Get a list of provider (banking) accounts added by the user.
+     *
+     * This includes all failed and successfully added provider accounts.
+     *
+     * https://developer.yodlee.com/api-reference/aggregation#tag/ProviderAccounts
+     *
+     */
+    public function getProviderAccounts($username)
+    {
+        return $this->apiGet('providerAccounts', $username);
+    }
+
+    /**
+     * Get all transactions for the last 90 days.
+     *
+     * https://developer.yodlee.com/api-reference/aggregation#tag/Transactions/operation/getTransactions
+     *
+     */
+    public function getTransactions($username, $fromDate = null)
+    {
+        $fromDate == null
+            ? $fromDate = Carbon::now()->subDays(90)->format('Y-m-d')
+            : $fromDate = $fromDate;
+
+        $url = "transactions?fromDate=$fromDate";
+
+        return $this->apiGet($url, $username);
+    }
+
+    /**
+     * Get transactions for the last 90 days for a specific account only.
+     *
+     * https://developer.yodlee.com/api-reference/aggregation#tag/Transactions/operation/getTransactions
+     *
+     */
+    public function getTransactionsByAccount($username, $accountId, $fromDate = null)
+    {
+        $fromDate == null
+            ? $fromDate = Carbon::now()->subDays(90)->format('Y-m-d')
+            : $fromDate = $fromDate;
+
+        $url = "transactions?accountId=$accountId&fromDate=$fromDate";
+
+        return $this->apiGet($url, $username);
+    }
+
+    /**
+     * The get user details service is used to get the user profile information
+     * and the application preferences set at the time of user registration.
+     *
+     * https://developer.yodlee.com/api-reference#tag/User/operation/getUser
+     *
+     */
+    public function getUser($username)
+    {
+        return $this->apiGet('user', $username);
+    }
+
+    /**
+     * You can call get user without a username which returns the first user
+     */
+    public function getAllUsers($username = null)
+    {
+        return $this->apiGet('user', $username);
+    }
+
+    /**
+     * Add a new user (consumer) to the system.
+     *
+     * https://developer.yodlee.com/api-reference/aggregation#tag/User/operation/registerUser
+     *
+     */
+    public function registerUser(
+        $loginName,
+        $email,
+        $currency = 'ZAR',
+        $timeZone = 'GMT+2',
+        $dateFormat = 'yyyy-MM-dd',
+        $locale = 'en_ZA'
+    ) {
+        $postFields = '
+        {
+            "user": {
+              "loginName":"' . $loginName . '",              
+              "email": "' . $email . '",
+              "preferences": {                
+                "currency": "' . $currency . '",
+                "timeZone": "' . $timeZone . '",
+                "dateFormat": "' . $dateFormat . '",
+                "locale": "' . $locale . '"
+              }              
+            }
+          }
+        ';
+
+        $url = $this->apiUrl . 'user/register';
 
         $header = [
             'Api-Version: 1.1',
-            'Authorization: Bearer '.$this->generateJwtToken($loginName),
-            'Cobrand-Name: '.$this->cobrandName,
+            'Cobrand-Name: ' . $this->cobrandName,
+            'Authorization: Bearer ' . $this->generateGenericJwtToken(),
             'Content-Type: application/json',
         ];
 
-        $api = new Api;
+        $api = new Api();
 
-        $result = $api->delete($url, $header);
+        $result = json_decode($api->post($url, $postFields, $header));
+
+        if (isset($result->errorMessage)) {
+            throw new Exception($result->errorMessage);
+        }
 
         return $result;
     }
 
+/**
+     * Delete a user (Yodlee consumer). This is also called unregister a user.
+     *
+     * On success this method returns an empty string but on the CURL request is generates a 204 (Success without content)
+     *
+     * https://developer.yodlee.com/api-reference/aggregation#tag/User/operation/userLogout
+     */
+    public function unregisterUser($loginName)
+    {
+        $url = $this->apiUrl . 'user/unregister';
+
+        $header = [
+            'Api-Version: 1.1',
+            'Authorization: Bearer ' . $this->generateJwtToken($loginName),
+            'Cobrand-Name: ' . $this->cobrandName,
+            'Content-Type: application/json',
+        ];
+
+        $api = new Api();
+
+        $result = json_decode($api->delete($url, '', $header));
+
+        if (isset($result->errorMessage)) {
+            throw new Exception($result->errorMessage);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Deprecate, we refer to this now as unregisterUser to keep it consistent
+     * of how it's named in the API
+     */
+    public function deleteUser($loginName) {
+        return $this->unregisterUser($loginName);
+    }
+
+    /**
+     * This endpoint is used to generate an API key.
+     *
+     * https://developer.yodlee.com/api-reference/aggregation#tag/Auth/operation/generateApiKey
+     *
+     */
     public function generateApiKey($url, $cobrandArray, $publicKey)
     {
         $curl = curl_init();
@@ -107,12 +278,12 @@ class YodleeApi implements BankingProvider
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => '{
-        		"publicKey": "'.$publicKey.'"
+        		"publicKey": "' . $publicKey . '"
   			}',
             CURLOPT_HTTPHEADER => [
                 'Api-Version: 1.1',
-                'Authorization: cobSession='.$cobrandArray['cobSession'],
-                'Cobrand-Name: '.$cobrandArray['cobrandName'],
+                'Authorization: cobSession=' . $cobrandArray['cobSession'],
+                'Cobrand-Name: ' . $cobrandArray['cobrandName'],
                 'Content-Type: application/json',
             ],
         ]);
@@ -129,6 +300,14 @@ class YodleeApi implements BankingProvider
 
     /**
      * Generic tokens are used for global API calls that does not pertain to a user.
+     *
+     * The key format must be precise other you may get this error:
+     *  openssl_sign(): Supplied key param cannot be coerced into a private key
+     *
+     * Yodlee documentation overview of JWT:
+     * https://developer.yodlee.com/docs/overview-json-web-tokens
+     * https://developer.yodlee.com/docs/api/1.1/getting-started-with-jwts
+     *
      */
     public function generateGenericJwtToken()
     {
@@ -141,6 +320,9 @@ class YodleeApi implements BankingProvider
         return JWT::encode($payload, $this->privateKey, 'RS512');
     }
 
+    /**
+     * Duplicate of generateGenericJwtToken, TODO consolidate
+     */
     public function generateJwtToken($username)
     {
         $payload = [
@@ -151,19 +333,6 @@ class YodleeApi implements BankingProvider
         ];
 
         return JWT::encode($payload, $this->privateKey, 'RS512');
-    }
-
-    /**
-     * Get all accounts of a user held at the providers, i.e. all their bank accounts.
-     */
-    public function getAccounts($user = null)
-    {
-        return $this->apiGet('accounts', $user);
-    }
-
-    public function getApiKeys()
-    {
-        return $this->apiGet('auth/apiKey');
     }
 
     public function getCobSession($url, $cobrandArray)
@@ -181,13 +350,13 @@ class YodleeApi implements BankingProvider
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => '{
         		"cobrand":      {
-					"cobrandLogin": "'.$cobrandArray['cobrandLogin'].'",
-					"cobrandPassword": "'.$cobrandArray['cobrandPassword'].'"
+					"cobrandLogin": "' . $cobrandArray['cobrandLogin'] . '",
+					"cobrandPassword": "' . $cobrandArray['cobrandPassword'] . '"
          		}
     		}',
             CURLOPT_HTTPHEADER => [
                 'Api-Version: 1.1',
-                'Cobrand-Name: '.$cobrandArray['cobrandName'],
+                'Cobrand-Name: ' . $cobrandArray['cobrandName'],
                 'Content-Type: application/json',
                 'Cookie: JSESSIONID=xxx', // REDACTED TODO Research
             ],
@@ -199,112 +368,6 @@ class YodleeApi implements BankingProvider
 
         $object = json_decode($response);
 
-        ray($object);
-
         return $object->session->cobSession;
-    }
-
-    /**
-     * Get a list of provider accounts added by the user.
-     *
-     * This includes the failed and successfully added provider accounts.
-     *
-     * https://developer.yodlee.com/api-reference/aggregation#tag/ProviderAccounts
-     */
-    public function getProviderAccounts($username)
-    {
-        return $this->apiGet('providerAccounts', $username);
-    }
-
-    /**
-     * Get a list of every all the providers that have been added by Yodlee.
-     *
-     * https://developer.yodlee.com/api-reference/aggregation#tag/Providers
-     */
-    public function getProviders($priority = 'cobrand')
-    {
-        return $this->apiGet("providers?priority=$priority&countryISOCode=ZA");
-    }
-
-    /**
-     * Get all transactions for the last 90 days.
-     *
-     * https://developer.yodlee.com/api-reference/aggregation#operation/getTransactions
-     */
-    public function getTransactions($username, $fromDate = null)
-    {
-        $fromDate == null
-            ? $fromDate = Carbon::now()->subDays(90)->format('Y-m-d')
-            : $fromDate = $fromDate;
-
-        $url = "transactions?fromDate=$fromDate";
-
-        return $this->apiGet($url, $username);
-    }
-
-    /**
-     * Get transactions for the last 90 days for a specific account only.
-     *
-     * https://developer.yodlee.com/api-reference/aggregation#operation/getTransactions
-     */
-    public function getTransactionsByAccount($username, $accountId, $fromDate = null)
-    {
-        $fromDate == null
-            ? $fromDate = Carbon::now()->subDays(90)->format('Y-m-d')
-            : $fromDate = $fromDate;
-
-        $url = "transactions?accountId=$accountId&fromDate=$fromDate";
-
-        return $this->apiGet($url, $username);
-    }
-
-    /**
-     * Add a new user (consumer) to the system.
-     *
-     * https://developer.yodlee.com/api-reference/aggregation#operation/registerUser
-     */
-    public function registerUser($loginName, $email)
-    {
-        $postFields = '
-        {
-            "user": {
-              "loginName":"'.$loginName.'",              
-              "email": "'.$email.'",
-              "preferences": {                
-                "currency": "ZAR",
-                "timeZone": "GMT+2",
-                "dateFormat": "yyyy-MM-dd",
-                "locale": "en_ZA"
-              }              
-            }
-          }
-        ';
-
-        $url = $this->apiUrl.'user/register';
-
-        $header = [
-            'Api-Version: 1.1',
-            'Cobrand-Name: '.$this->cobrandName,
-            'Authorization: Bearer '.$this->generateGenericJwtToken(),
-            'Content-Type: application/json',
-        ];
-
-        $api = new Api;
-
-        $result = $api->post($url, $postFields, $header);
-
-        ray(json_decode($result));
-
-        return json_decode($result);
-    }
-
-    /**
-     * getUser.
-     *
-     * https://developer.yodlee.com/api-reference#operation/getUser
-     */
-    public function getUser($username)
-    {
-        return $this->apiGet('user', $username);
     }
 }
