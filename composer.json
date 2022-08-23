@@ -1,5 +1,5 @@
 {
-    "name": "fintech-systems/yodlee-php-api",
+    "name": "fintech-systems/yodlee-api",
     "require": {
         "phpseclib/phpseclib": "^3.0.10",
         "fintech-systems/laravel-api-helpers": "^0.1.4",
