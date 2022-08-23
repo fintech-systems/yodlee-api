@@ -32,6 +32,8 @@ class YodleeApiServiceProvider extends ServiceProvider
                 TransactionsCommand::class,
             ]);
         }
+
+        $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
     }
 
     public function register()

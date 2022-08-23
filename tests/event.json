@@ -1,0 +1,5 @@
+{
+    "event": {
+        "callbackUrl": "https://bankystatement.com/api/v1/event/"
+    }
+}

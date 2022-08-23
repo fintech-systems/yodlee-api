@@ -2,8 +2,9 @@
 
 namespace FintechSystems\Api\Tests;
 
-use FintechSystems\YodleeApi\Tests\Setup;
 use FintechSystems\YodleeApi\YodleeApi;
+use FintechSystems\YodleeApi\Tests\Setup;
+use FintechSystems\YodleeApi\Enums\SubscriptionNotificationEvent;
 
 class ApiTest extends Setup
 {
@@ -27,8 +28,6 @@ class ApiTest extends Setup
         $yodlee = new YodleeApi($env);
 
         $token = $yodlee->generateGenericJWTToken();
-
-        // dd($token);
 
         $this->assertGreaterThan(498, strlen($token));
     }
@@ -65,7 +64,7 @@ class ApiTest extends Setup
             'cobrandPassword' => $client['cobrand_password'],
         ];
 
-        $loginUrl = $client['api_url'].'cobrand/login';
+        $loginUrl = $client['api_url'] . 'cobrand/login';
 
         $yodlee = new YodleeApi($client);
 
@@ -74,11 +73,11 @@ class ApiTest extends Setup
             $cobrandArray
         );
 
-        $apiKeyUrl = $client['api_url'].'auth/apiKey';
+        $apiKeyUrl = $client['api_url'] . 'auth/apiKey';
 
         ray($apiKeyUrl);
 
-        $publicKey = file_get_contents('storage/public.pem');
+        $publicKey = file_get_contents('storage/public-key.pem');
 
         $key = $yodlee->generateAPIKey(
             $apiKeyUrl,
@@ -127,5 +126,45 @@ class ApiTest extends Setup
         $result = $yodlee->getAllUsers();
 
         $this->assertObjectHasAttribute('user', json_decode($result));
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_subscribe_to_a_data_updates_notification_event()
+    {
+        $yodlee = new YodleeApi($this->getClient());
+
+        $result = $yodlee->createSubscriptionNotificationEvent(
+            SubscriptionNotificationEvent::DATA_UPDATES
+        );
+
+        $this->assertEquals($result, '');
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_get_subscribed_notification_events()
+    {
+        $yodlee = new YodleeApi($this->getClient());
+
+        $result = $yodlee->getSubscribedNotificationEvents();
+
+        $this->assertObjectHasAttribute('event', json_decode($result));
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_delete_a_refresh_notification_event()
+    {
+        $yodlee = new YodleeApi($this->getClient());
+
+        $result = $yodlee->deleteNotificationSubscription(
+            SubscriptionNotificationEvent::DATA_UPDATES
+        );
+
+        $this->assertEquals($result, '');
     }
 }

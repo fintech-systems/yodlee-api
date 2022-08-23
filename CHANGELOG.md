@@ -2,6 +2,19 @@
 
 All notable changes to `yodlee-php-api` will be documented in this file.
 
+## 0.0.14 - 2022-08.23
+
+This will be the last version on packagist as yodlee-php-api, the next version will be simply know as yodlee-api. Also moving over to a version that can use Laravel's HTTP facade as this will greatly simplify testing.
+
+- Renamed LaravelApiHelpers na ApiHelpers
+- Added `EVENT_CALLBACK_URL` URL for callback in .env to aid in testing
+- Added createSubscriptionNotificationEvent, getSubscribedNotificationEvents and deleteNotificationSubscription API calls and rudimentary tests
+- Added API post and delete methods
+- Created a callback url for subscription notification events and added to service provider
+- In initialize_app, specify /storage as path to keys
+- Simplified .gitignore by also renaming key files
+- Added getSubscribedNotificationEvents
+
 ## 0.0.13 - 2022-08-20
 
 - Updated tests to use `/storage` and added instructions on read about using this folder

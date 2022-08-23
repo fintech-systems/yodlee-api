@@ -2,11 +2,11 @@
 
 namespace FintechSystems\YodleeApi\Commands;
 
-use FintechSystems\LaravelApiHelpers\Commands\LaravelApiHelpersCommand;
+use FintechSystems\LaravelApiHelpers\Commands\ApiHelpersCommand;
 use FintechSystems\YodleeApi\Facades\YodleeApi;
 use Illuminate\Console\Command;
 
-class TransactionsCommand extends LaravelApiHelpersCommand
+class TransactionsCommand extends ApiHelpersCommand
 {
     /**
      * The name and signature of the console command.

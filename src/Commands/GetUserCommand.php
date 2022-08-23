@@ -2,11 +2,10 @@
 
 namespace FintechSystems\YodleeApi\Commands;
 
-use FintechSystems\LaravelApiHelpers\Commands\LaravelApiHelpersCommand;
+use FintechSystems\LaravelApiHelpers\Commands\ApiHelpersCommand;
 use FintechSystems\YodleeApi\Facades\YodleeApi;
-use Illuminate\Console\Command;
 
-class GetUserCommand extends LaravelApiHelpersCommand
+class GetUserCommand extends ApiHelpersCommand
 {
     /**
      * The name and signature of the console command.

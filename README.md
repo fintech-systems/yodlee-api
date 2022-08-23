@@ -1,4 +1,4 @@
-# Yodlee PHP API
+# Yodlee API
 
 [![Latest Stable Version](https://poser.pugx.org/fintech-systems/yodlee-php-api/v/stable?format=flat-square)](https://packagist.org/packages/fintech-systems/yodlee-php-api)
 ![GitHub](https://img.shields.io/github/license/fintech-systems/yodlee-php-api)
@@ -13,8 +13,8 @@ composer require fintech-systems/yodlee-php-api
 
 ### Store private and public keys
 
-Create a directory `/storage` and copy your private key to `/storage/private.pem.key`.
-If you want to run the full testsuite, also copy `public.pem` to `/storage`.
+Create a directory `/storage` and copy your private key to `/storage/private-key.pem`.
+If you want to run the full testsuite, also copy `public-key.pem` to `/storage`.
 
 ### Set up the environment file
 
@@ -58,33 +58,47 @@ php artisan vendor:publish --tag=yodlee-config
 
 ## Local Development
 
-- Ensure a private key named private.pem is stored in the root directory of the application.
+- Ensure your `private-key.pem` and `public-key.pem` keys are stored in /storage
+
+The event subscription callback URL will normally be `https://app_url/api/v1/event`.
+
+If you're doing local development, add a temporary URL to the `.env` file, e.g:
+`EVENT_CALLBACK_URL=my-app.eu-1.sharedwithexpose.com/api/v1/event`
+
+The above example assumes you're using Expose. The start Expose with this URL with Laravel Valet, do this:
+
+`expose share --subdomain=my-app --server=eu-1 http://my-app.test`
 
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
 
-## Security Warning
+## .gitignore Security Notice
 
+Storing private or public keys in a source code repository is a massive security risk.
 
-Storing a private key in public source code repository is a huge security risk.
-Ensure the `.gitignore` file contains at least the following:
+The `.gitignore` file supplied with this repository contains the following:
 
 ```
+/storage/*.pem
+```
 
-*.pem
+Under no circumstances upload your keys to a public (or private) repo.
+
+Additionally `*.json` ignores are there because the Api Helper has the ability to cache output and those files should also be ignored.
+
+```
 *.example.json
 *.cache.json
 ```
 
-The `*.json` ignores are there because some Laravel Artisan commands have the ability to cache and those files should also be ignored.
-
 Commands
 ========
 
-Numerous Laravel Artisan commands have the ability to cache API requests.
+The Artisan commands has the ability to cache API requests by appending `--cached`. This is a security risk if your .gitignore is not set up correctly. Please see the section above `.gitignore Security Notice`
 
-Note: This is a security risk if your .gitignore is not setup correctly. See the section `Security Warning`
+List of Commands
+----------------
 
 Display all API keys:
 
@@ -181,3 +195,7 @@ The Yodlee Developer's API Reference can be found here:
 
 https://developer.yodlee.com/api-reference
 
+I'm developing this API on my own time for a larger project but if you reach out I might be able to help or prioritize features.
+
+eugene@fintechsystems.net
++27823096710

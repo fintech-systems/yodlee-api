@@ -6,14 +6,10 @@ yarn-error.log
 .phpunit.result.cache
 /build
 
-/storage/private.pem.key
-/storage/*.key
-/storage/public.pem
+.env.testing
+
 /storage/*.pem
 
-.env.testing
-*.pem
-*.key
 *.example.json
 *.cache.json
 

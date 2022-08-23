@@ -12,7 +12,7 @@ class YodleeApi implements BankingProvider
 {
     private $privateKeyStoragePath = '/storage/';
 
-    private $privateKeyFilename = 'private.pem.key';
+    private $privateKeyFilename = 'private-key.pem';
 
     private $privateKey;
 
@@ -35,8 +35,8 @@ class YodleeApi implements BankingProvider
 
         $this->privateKey = file_get_contents(
             $cwd
-                .$this->privateKeyStoragePath
-                .$this->privateKeyFilename
+                . $this->privateKeyStoragePath
+                . $this->privateKeyFilename
         );
     }
 
@@ -44,7 +44,8 @@ class YodleeApi implements BankingProvider
     {
         if ($username == null) {
             $token = $this->generateJwtToken($this->username);
-            ray('Defaulting to stored username')->orange();
+
+            ray("Defaulting to stored username for get '$this->username'")->orange();
         } else {
             $token = $this->generateJwtToken($username);
         }
@@ -52,11 +53,61 @@ class YodleeApi implements BankingProvider
         $api = new Api();
 
         $response = $api->get(
-            $this->apiUrl.$endpoint,
+            $this->apiUrl . $endpoint,
             [
                 'Api-Version: 1.1',
-                'Authorization: Bearer '.$token,
-                'Cobrand-Name: '.$this->cobrandName,
+                'Authorization: Bearer ' . $token,
+                'Cobrand-Name: ' . $this->cobrandName,
+                'Content-Type: application/json',
+            ]
+        );
+
+        return $response;
+    }
+
+    public function apiPost($endpoint, $data)
+    {
+
+        $token = $this->generateJwtToken($this->username);
+
+        ray("Defaulting to stored username '$this->username' for post request")->orange();
+
+        ray("The endpoint for this post is $endpoint");
+
+        ray("The data is ", $data);
+
+        $api = new Api();
+
+        $response = $api->post(
+            $this->apiUrl . $endpoint,
+            $data,
+            [
+                'Api-Version: 1.1',
+                'Authorization: Bearer ' . $token,
+                'Cobrand-Name: ' . $this->cobrandName,
+                'Content-Type: application/json',
+            ]
+        );
+
+        return $response;
+    }
+
+    public function apiDelete($endpoint) {
+        $token = $this->generateJwtToken($this->username);
+
+        ray("Defaulting to stored username '$this->username' for delete request")->orange();
+
+        ray("The endpoint for this post is $endpoint");
+
+        $api = new Api();
+
+        $response = $api->delete(
+            $this->apiUrl . $endpoint,
+            '',
+            [
+                'Api-Version: 1.1',
+                'Authorization: Bearer ' . $token,
+                'Cobrand-Name: ' . $this->cobrandName,
                 'Content-Type: application/json',
             ]
         );
@@ -111,6 +162,42 @@ class YodleeApi implements BankingProvider
     {
         return $this->apiGet('providerAccounts', $username);
     }
+
+    /**
+     * Configs Operation createSubscriptionNotificationEvent
+     * 
+     * https://developer.yodlee.com/api-reference#tag/Configs/operation/createSubscriptionNotificationEvent
+     */
+    public function createSubscriptionNotificationEvent($eventName, $callbackUrl = '')
+    {
+        if (env('EVENT_CALLBACK_URL')) {
+            $callbackUrl = env('EVENT_CALLBACK_URL');
+        } else {
+            $callbackUrl = config('app.url');
+        }
+        
+        $data = '{ "event": {
+                    "callbackUrl":"' . $callbackUrl . '"
+                }}';
+
+        return $this->apiPost("/configs/notifications/events/$eventName", $data);
+    }
+
+    /**
+     * getSubscribedNotificationEvents
+     * 
+     * https://developer.yodlee.com/api-reference#tag/Configs/operation/getSubscribedNotificationEvents
+     */
+    public function getSubscribedNotificationEvents()
+    {
+        return $this->apiGet('/configs/notifications/events');
+    }
+
+    public function deleteNotificationSubscription($eventName)
+    {
+        return $this->apiDelete("/configs/notifications/events/$eventName");
+    }
+
 
     /**
      * Get all transactions for the last 90 days.
@@ -179,24 +266,24 @@ class YodleeApi implements BankingProvider
         $postFields = '
         {
             "user": {
-              "loginName":"'.$loginName.'",              
-              "email": "'.$email.'",
+              "loginName":"' . $loginName . '",              
+              "email": "' . $email . '",
               "preferences": {                
-                "currency": "'.$currency.'",
-                "timeZone": "'.$timeZone.'",
-                "dateFormat": "'.$dateFormat.'",
-                "locale": "'.$locale.'"
+                "currency": "' . $currency . '",
+                "timeZone": "' . $timeZone . '",
+                "dateFormat": "' . $dateFormat . '",
+                "locale": "' . $locale . '"
               }              
             }
           }
         ';
 
-        $url = $this->apiUrl.'user/register';
+        $url = $this->apiUrl . 'user/register';
 
         $header = [
             'Api-Version: 1.1',
-            'Cobrand-Name: '.$this->cobrandName,
-            'Authorization: Bearer '.$this->generateGenericJwtToken(),
+            'Cobrand-Name: ' . $this->cobrandName,
+            'Authorization: Bearer ' . $this->generateGenericJwtToken(),
             'Content-Type: application/json',
         ];
 
@@ -220,12 +307,12 @@ class YodleeApi implements BankingProvider
      */
     public function unregisterUser($loginName)
     {
-        $url = $this->apiUrl.'user/unregister';
+        $url = $this->apiUrl . 'user/unregister';
 
         $header = [
             'Api-Version: 1.1',
-            'Authorization: Bearer '.$this->generateJwtToken($loginName),
-            'Cobrand-Name: '.$this->cobrandName,
+            'Authorization: Bearer ' . $this->generateJwtToken($loginName),
+            'Cobrand-Name: ' . $this->cobrandName,
             'Content-Type: application/json',
         ];
 
@@ -270,12 +357,12 @@ class YodleeApi implements BankingProvider
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => '{
-        		"publicKey": "'.$publicKey.'"
+        		"publicKey": "' . $publicKey . '"
   			}',
             CURLOPT_HTTPHEADER => [
                 'Api-Version: 1.1',
-                'Authorization: cobSession='.$cobrandArray['cobSession'],
-                'Cobrand-Name: '.$cobrandArray['cobrandName'],
+                'Authorization: cobSession=' . $cobrandArray['cobSession'],
+                'Cobrand-Name: ' . $cobrandArray['cobrandName'],
                 'Content-Type: application/json',
             ],
         ]);
@@ -341,13 +428,13 @@ class YodleeApi implements BankingProvider
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => '{
         		"cobrand":      {
-					"cobrandLogin": "'.$cobrandArray['cobrandLogin'].'",
-					"cobrandPassword": "'.$cobrandArray['cobrandPassword'].'"
+					"cobrandLogin": "' . $cobrandArray['cobrandLogin'] . '",
+					"cobrandPassword": "' . $cobrandArray['cobrandPassword'] . '"
          		}
     		}',
             CURLOPT_HTTPHEADER => [
                 'Api-Version: 1.1',
-                'Cobrand-Name: '.$cobrandArray['cobrandName'],
+                'Cobrand-Name: ' . $cobrandArray['cobrandName'],
                 'Content-Type: application/json',
                 'Cookie: JSESSIONID=xxx', // REDACTED TODO Research
             ],

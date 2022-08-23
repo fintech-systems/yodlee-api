@@ -8,9 +8,9 @@ include 'Crypt/RSA.php';
 
 $rsa_key = Yodlee::generateRSAKey();
 
-file_put_contents('private.pem', $rsa_key['private_key']);
+file_put_contents('storage/private-key.pem', $rsa_key['private_key']);
 
-file_put_contents('public.pem', $rsa_key['public_key']);
+file_put_contents('storage/public-key.pem', $rsa_key['public_key']);
 
 $url = 'https://stage.api.yodlee.uk/ysl/cobrand/login';
 
