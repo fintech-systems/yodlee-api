@@ -16,7 +16,7 @@ class SubscriptionNotificationEvent
             self::DATA_UPDATES => 'Data Updates',
             self::AUTO_REFRESH_UPDATES => 'Auto Refresh Updates',
             self::LATEST_BALANCE_UPDATES => 'Latest Balance Updates',
-            
+
         ];
     }
 }
