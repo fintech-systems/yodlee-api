@@ -1,14 +1,14 @@
 # Yodlee API
 
-[![Latest Stable Version](https://poser.pugx.org/fintech-systems/yodlee-php-api/v/stable?format=flat-square)](https://packagist.org/packages/fintech-systems/yodlee-php-api)
-![GitHub](https://img.shields.io/github/license/fintech-systems/yodlee-php-api)
+[![Latest Stable Version](https://poser.pugx.org/fintech-systems/yodlee-php-api/v/stable?format=flat-square)](https://packagist.org/packages/fintech-systems/yodlee-api)
+![GitHub](https://img.shields.io/github/license/fintech-systems/yodlee-api)
 
 ## Installation
 
 ### Install the package via composer:
 
 ```bash
-composer require fintech-systems/yodlee-php-api
+composer require fintech-systems/yodlee-api
 ```
 
 ### Store private and public keys
