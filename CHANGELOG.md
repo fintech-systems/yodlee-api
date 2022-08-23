@@ -2,7 +2,11 @@
 
 All notable changes to `yodlee-php-api` will be documented in this file.
 
-## 0.0.14 - 2022-08.23
+## 0.0.15 - 2022-08-23
+
+- Fix `LaravelApiHelpersCommand` renaming problem
+
+## 0.0.14 - 2022-08-23
 
 This will be the last version on packagist as yodlee-php-api, the next version will be simply know as yodlee-api. Also moving over to a version that can use Laravel's HTTP facade as this will greatly simplify testing.
 
