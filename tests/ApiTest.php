@@ -2,9 +2,9 @@
 
 namespace FintechSystems\Api\Tests;
 
-use FintechSystems\YodleeApi\YodleeApi;
-use FintechSystems\YodleeApi\Tests\Setup;
 use FintechSystems\YodleeApi\Enums\SubscriptionNotificationEvent;
+use FintechSystems\YodleeApi\Tests\Setup;
+use FintechSystems\YodleeApi\YodleeApi;
 
 class ApiTest extends Setup
 {
@@ -64,7 +64,7 @@ class ApiTest extends Setup
             'cobrandPassword' => $client['cobrand_password'],
         ];
 
-        $loginUrl = $client['api_url'] . 'cobrand/login';
+        $loginUrl = $client['api_url'].'cobrand/login';
 
         $yodlee = new YodleeApi($client);
 
@@ -73,7 +73,7 @@ class ApiTest extends Setup
             $cobrandArray
         );
 
-        $apiKeyUrl = $client['api_url'] . 'auth/apiKey';
+        $apiKeyUrl = $client['api_url'].'auth/apiKey';
 
         ray($apiKeyUrl);
 
