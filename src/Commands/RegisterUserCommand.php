@@ -45,7 +45,7 @@ class RegisterUserCommand extends Command
         );
 
         // if (isset($result->errorCode)) {
-        if (!isset($result->user->id)) {
+        if (! isset($result->user->id)) {
             Log::error($result);
 
             // $this->error($result->errorMessage); // Output the error to the console
