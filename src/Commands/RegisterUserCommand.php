@@ -44,10 +44,15 @@ class RegisterUserCommand extends Command
             $this->argument('email')
         );
 
-        if (isset($result->errorCode)) {
+        // if (isset($result->errorCode)) {
+        if (!isset($result->user->id)) {
+            Log::error($result);
+
+            // $this->error($result->errorMessage); // Output the error to the console
             $this->error($result->errorMessage); // Output the error to the console
 
-            Log::error($result->errorMessage);
+            // Log::error($result->errorMessage);
+            // Log::error($result);
 
             return -1;
         }
