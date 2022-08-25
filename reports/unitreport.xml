@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="/home/eugene/code/yodlee-api/tests" tests="10" assertions="10" errors="0" warnings="0" failures="0" skipped="0" time="17.703916">
+    <testsuite name="FintechSystems\Api\Tests\ApiTest" file="/home/eugene/code/yodlee-api/tests/ApiTest.php" tests="10" assertions="10" errors="0" warnings="0" failures="0" skipped="0" time="17.703916">
+      <testcase name="it_can_read_an_api_url_parameter_from_the_testing_environment_and_assign_it_to_an_array" class="FintechSystems\Api\Tests\ApiTest" classname="FintechSystems.Api.Tests.ApiTest" file="/home/eugene/code/yodlee-api/tests/ApiTest.php" line="12" assertions="1" time="0.052273"/>
+      <testcase name="it_can_generate_a_jwt_token" class="FintechSystems\Api\Tests\ApiTest" classname="FintechSystems.Api.Tests.ApiTest" file="/home/eugene/code/yodlee-api/tests/ApiTest.php" line="24" assertions="1" time="0.009419"/>
+      <testcase name="api_keys_can_be_retrieved" class="FintechSystems\Api\Tests\ApiTest" classname="FintechSystems.Api.Tests.ApiTest" file="/home/eugene/code/yodlee-api/tests/ApiTest.php" line="36" assertions="1" time="1.783509"/>
+      <testcase name="trying_to_generate_a_sixth_key_using_public_key_produces_an_error" class="FintechSystems\Api\Tests\ApiTest" classname="FintechSystems.Api.Tests.ApiTest" file="/home/eugene/code/yodlee-api/tests/ApiTest.php" line="51" assertions="1" time="3.572684"/>
+      <testcase name="it_can_register_a_new_user" class="FintechSystems\Api\Tests\ApiTest" classname="FintechSystems.Api.Tests.ApiTest" file="/home/eugene/code/yodlee-api/tests/ApiTest.php" line="86" assertions="1" time="2.562076"/>
+      <testcase name="it_can_unregister_a_user" class="FintechSystems\Api\Tests\ApiTest" classname="FintechSystems.Api.Tests.ApiTest" file="/home/eugene/code/yodlee-api/tests/ApiTest.php" line="96" assertions="1" time="1.616570"/>
+      <testcase name="it_can_get_a_user" class="FintechSystems\Api\Tests\ApiTest" classname="FintechSystems.Api.Tests.ApiTest" file="/home/eugene/code/yodlee-api/tests/ApiTest.php" line="113" assertions="1" time="1.455723"/>
+      <testcase name="it_can_subscribe_to_a_data_updates_notification_event" class="FintechSystems\Api\Tests\ApiTest" classname="FintechSystems.Api.Tests.ApiTest" file="/home/eugene/code/yodlee-api/tests/ApiTest.php" line="125" assertions="1" time="3.355698"/>
+      <testcase name="it_can_get_subscribed_notification_events" class="FintechSystems\Api\Tests\ApiTest" classname="FintechSystems.Api.Tests.ApiTest" file="/home/eugene/code/yodlee-api/tests/ApiTest.php" line="139" assertions="1" time="1.970361"/>
+      <testcase name="it_can_delete_a_refresh_notification_event" class="FintechSystems\Api\Tests\ApiTest" classname="FintechSystems.Api.Tests.ApiTest" file="/home/eugene/code/yodlee-api/tests/ApiTest.php" line="151" assertions="1" time="1.325605"/>
+    </testsuite>
+  </testsuite>
+</testsuites>

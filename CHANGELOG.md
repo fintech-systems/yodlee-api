@@ -2,6 +2,15 @@
 
 All notable changes to `yodlee-php-api` will be documented in this file.
 
+## 0.0.17 - 2022-08-25
+
+- Refactor all tests to use Laravel's HTTP client instead of custom get
+- Remove dependency of FintechSystem/ApiHelper
+- Update composer dependencies
+- Create event subscription callback API
+- Try code coverage with PhpUnit, but abandon
+- Simplify tests setup
+
 ## 0.0.15 - 2022-08-23
 
 - Fix `LaravelApiHelpersCommand` renaming problem

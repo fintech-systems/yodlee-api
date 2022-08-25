@@ -2,7 +2,7 @@
 
 namespace FintechSystems\YodleeApi\Tests;
 
-use PHPUnit\Framework\TestCase;
+use Orchestra\Testbench\TestCase;
 
 class Setup extends TestCase
 {
@@ -12,13 +12,14 @@ class Setup extends TestCase
     protected function init()
     {
         $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__.'/../');
+
         $dotenv->load();
     }
 
     /**
-     * Read the Cobrand and API credentials from the environment.
+     * Return the Cobrand, API credentials, and user from the environment.
      */
-    protected function getClient()
+    protected function client()
     {
         $this->init();
 

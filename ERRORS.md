@@ -37,7 +37,7 @@ Error Y019
 Where encountered
 
 Upon importing Yodlee accounts from staging endpoint during a Laravel migration:
-Yodlee apiGet endpoint: https://stage.api.yodlee.uk/ysl/accounts
+Yodlee get endpoint: https://stage.api.yodlee.uk/ysl/accounts
 
 ---
 
@@ -45,7 +45,7 @@ Yodlee apiGet endpoint: https://stage.api.yodlee.uk/ysl/accounts
 
 Where encountered
 
-After a long time using Bankystatement on local, running art yodlee:get-accounts first didn't have the right API key and now apparently it's not like the JWT token# yodlee-php-api
+After a long time using an application on local, running art yodlee:get-accounts first didn't have the right API key and thereafter it wasn't liking the JWT token # yodlee-api
 
 Be mindful of `Invalid token in authorization header` because it could indicate a generic problem with your user accessing the API, e.g. when they have been deleted.
 
