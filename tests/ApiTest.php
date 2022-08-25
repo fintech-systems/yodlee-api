@@ -58,7 +58,7 @@ class ApiTest extends Setup
             'cobrandPassword' => $client['cobrand_password'],
         ];
 
-        $loginUrl = $client['api_url'] . 'cobrand/login';
+        $loginUrl = $client['api_url'].'cobrand/login';
 
         $yodlee = new YodleeApi($client);
 
@@ -67,7 +67,7 @@ class ApiTest extends Setup
             $cobrandArray
         );
 
-        $apiKeyUrl = $client['api_url'] . 'auth/apiKey';
+        $apiKeyUrl = $client['api_url'].'auth/apiKey';
 
         $publicKey = file_get_contents('storage/public-key.pem');
 
@@ -108,7 +108,6 @@ class ApiTest extends Setup
      * Get A User Test
      *
      * Please note there is no API to get all users
-     * 
      */
     public function it_can_get_a_user()
     {
