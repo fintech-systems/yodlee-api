@@ -3,9 +3,9 @@
 namespace FintechSystems\YodleeApi\Commands;
 
 use Exception;
-use Illuminate\Console\Command;
-use FintechSystems\YodleeApi\Facades\YodleeApi;
 use FintechSystems\YodleeApi\Enums\SubscriptionNotificationEvent;
+use FintechSystems\YodleeApi\Facades\YodleeApi;
+use Illuminate\Console\Command;
 
 class UnsubscribeCommand extends Command
 {
@@ -39,12 +39,12 @@ class UnsubscribeCommand extends Command
      * @return int
      */
     public function handle()
-    {   
+    {
         $response = YodleeApi::deleteNotificationSubscription(
             SubscriptionNotificationEvent::DATA_UPDATES
         );
 
-        if ($response->getStatusCode() != 204) {            
+        if ($response->getStatusCode() != 204) {
             throw new Exception($response->json()['errorMessage']);
         }
     }
