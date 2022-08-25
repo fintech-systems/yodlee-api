@@ -74,7 +74,9 @@ Test examples:
 vendor/bin/phpunit
 vendor/bin/phpunit --testdox
 vendor/bin/phpunit tests/ApiTest.php
-vendor/bin/phpunit --filter it_can_generate_a_jwt_token tests/ApiTest.php
+vendor/bin/phpunit --filter it_can_generate_a_jwt_token tests/
+ApiTest.php
+XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-html=tests/coverage-report
 ```
 
 ## Changelog
