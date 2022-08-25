@@ -173,6 +173,10 @@ class YodleeApi implements BankingProvider
             ]
         ];
 
+        // $data = '{ "event": {
+        //             "callbackUrl":"' . $callbackUrl . '"
+        //         }}';
+
         $url = $this->apiUrl . "/configs/notifications/events/$eventName";
 
         return Http::withHeaders($this->header)
@@ -393,7 +397,7 @@ class YodleeApi implements BankingProvider
     		}',
             CURLOPT_HTTPHEADER => [
                 'Api-Version: 1.1',
-                'Cobrand-Name: ' . $cobrandArray['cobrandName'],
+                'Cobrand-Name: '.$cobrandArray['cobrandName'],
                 'Content-Type: application/json',
                 'Cookie: JSESSIONID=xxx', // REDACTED TODO Research
             ],
