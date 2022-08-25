@@ -3,9 +3,9 @@
 namespace FintechSystems\YodleeApi\Commands;
 
 use Exception;
-use Illuminate\Console\Command;
-use FintechSystems\YodleeApi\Facades\YodleeApi;
 use FintechSystems\YodleeApi\Enums\SubscriptionNotificationEvent;
+use FintechSystems\YodleeApi\Facades\YodleeApi;
+use Illuminate\Console\Command;
 
 class SubscribeCommand extends Command
 {
@@ -39,12 +39,12 @@ class SubscribeCommand extends Command
      * @return int
      */
     public function handle()
-    {   
+    {
         $response = YodleeApi::createSubscriptionNotificationEvent(
             SubscriptionNotificationEvent::DATA_UPDATES
         );
 
-        if ($response->getStatusCode() != 201) {            
+        if ($response->getStatusCode() != 201) {
             throw new Exception($response->json()['errorMessage']);
         }
     }
