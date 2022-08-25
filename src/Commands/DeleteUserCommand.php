@@ -19,7 +19,7 @@ class DeleteUserCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Delete a Yodlee user';
+    protected $description = 'Delete an existing Yodlee user';
 
     /**
      * Create a new command instance.

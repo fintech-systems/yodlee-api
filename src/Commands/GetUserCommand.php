@@ -19,7 +19,7 @@ class GetUserCommand extends LaravelApiHelpersCommand
      *
      * @var string
      */
-    protected $description = 'Retrieve details about a Yodlee user';
+    protected $description = 'Fetch details about a Yodlee user';
 
     public $cachedFile = 'user.cache.json';
 

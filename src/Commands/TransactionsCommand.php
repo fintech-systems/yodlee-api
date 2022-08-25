@@ -20,7 +20,7 @@ class TransactionsCommand extends LaravelApiHelpersCommand
      *
      * @var string
      */
-    protected $description = 'Retrieve a list of Yodlee transactions for a user';
+    protected $description = 'Fetch a list of Yodlee transactions for a user';
 
     public $cachedFile = 'transactions.cache.json';
 

@@ -2,6 +2,10 @@
 
 All notable changes to `yodlee-php-api` will be documented in this file.
 
+## 0.0.18 - 2022-08-25
+
+- Add commands to subscribe, fetch, and unsubscribe to event notifications for DATA_UPDATES
+
 ## 0.0.17 - 2022-08-25
 
 - Refactor all tests to use Laravel's HTTP client instead of custom get

@@ -2,15 +2,18 @@
 
 namespace FintechSystems\YodleeApi;
 
-use FintechSystems\YodleeApi\Commands\AccountsCommand;
+use Illuminate\Support\ServiceProvider;
 use FintechSystems\YodleeApi\Commands\ApiKeyCommand;
-use FintechSystems\YodleeApi\Commands\DeleteUserCommand;
 use FintechSystems\YodleeApi\Commands\GetUserCommand;
-use FintechSystems\YodleeApi\Commands\ProviderAccountsCommand;
+use FintechSystems\YodleeApi\Commands\AccountsCommand;
 use FintechSystems\YodleeApi\Commands\ProvidersCommand;
+use FintechSystems\YodleeApi\Commands\DeleteUserCommand;
 use FintechSystems\YodleeApi\Commands\RegisterUserCommand;
 use FintechSystems\YodleeApi\Commands\TransactionsCommand;
-use Illuminate\Support\ServiceProvider;
+use FintechSystems\YodleeApi\Commands\ProviderAccountsCommand;
+use FintechSystems\YodleeApi\Commands\EventSubscriptionsCommand;
+use FintechSystems\YodleeApi\Commands\SubscribeCommand;
+use FintechSystems\YodleeApi\Commands\UnsubscribeCommand;
 
 class YodleeApiServiceProvider extends ServiceProvider
 {
@@ -25,11 +28,14 @@ class YodleeApiServiceProvider extends ServiceProvider
                 AccountsCommand::class,
                 ApiKeyCommand::class,
                 DeleteUserCommand::class,
+                EventSubscriptionsCommand::class,
                 GetUserCommand::class,
                 ProvidersCommand::class,
                 ProviderAccountsCommand::class,
                 RegisterUserCommand::class,
+                SubscribeCommand::class,
                 TransactionsCommand::class,
+                UnsubscribeCommand::class,
             ]);
         }
 

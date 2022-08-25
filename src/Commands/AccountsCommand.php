@@ -20,7 +20,7 @@ class AccountsCommand extends LaravelApiHelpersCommand
      *
      * @var string
      */
-    protected $description = 'Retrieve a list of Yodlee accounts';
+    protected $description = 'Fetch a list of Yodlee accounts';
 
     public $cachedFile = 'accounts.cache.json';
 

@@ -166,15 +166,12 @@ class YodleeApi implements BankingProvider
         } else {
             $callbackUrl = config('app.url') . '/yodlee/event';
         }
+        
         $data = [
             'event' => [
                 'callbackUrl' => $callbackUrl
             ]
         ];
-
-        // $data = '{ "event": {
-        //             "callbackUrl":"' . $callbackUrl . '"
-        //         }}';
 
         $url = $this->apiUrl . "/configs/notifications/events/$eventName";
 
@@ -192,6 +189,11 @@ class YodleeApi implements BankingProvider
         return $this->get('/configs/notifications/events');
     }
 
+    /**
+     * deleteNotificationSubscription
+     * 
+     * https://developer.yodlee.com/api-reference#tag/Configs/operation/deleteSubscribedNotificationEvent
+     */
     public function deleteNotificationSubscription($eventName)
     {
         $url = $this->apiUrl . "/configs/notifications/events/$eventName";

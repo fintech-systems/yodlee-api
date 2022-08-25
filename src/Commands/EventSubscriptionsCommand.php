@@ -5,21 +5,21 @@ namespace FintechSystems\YodleeApi\Commands;
 use FintechSystems\YodleeApi\Facades\YodleeApi;
 use Illuminate\Console\Command;
 
-class ApiKeyCommand extends Command
+class EventSubscriptionsCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'yodlee:api-key';
+    protected $signature = 'yodlee:event-subscriptions';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Fetch a list of Yodlee API keys';
+    protected $description = 'Fetch a list of subscribed notification events';
 
     /**
      * Create a new command instance.
@@ -34,25 +34,12 @@ class ApiKeyCommand extends Command
     /**
      * Execute the console command.
      *
-     * Inspired by https://laravelsecrets.com/
-     *
      * @return int
      */
     public function handle()
-    {
-        $result = json_decode(YodleeApi::getApiKeys());
+    {        
+        $response = YodleeApi::getSubscribedNotificationEvents();
 
-        $result = collect($result->apiKey);
-
-        $headers = ['key', 'createdDate'];
-
-        $data = $result->map(function ($key) {
-            return [
-                'key'         => $key->key,
-                'createdDate' => $key->createdDate,
-            ];
-        });
-
-        $this->table($headers, $data);
+        return $response->json()['event'];
     }
 }

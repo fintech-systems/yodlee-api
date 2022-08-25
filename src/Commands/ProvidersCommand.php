@@ -19,7 +19,7 @@ class ProvidersCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Retrieve a list of Yodlee providers';
+    protected $description = 'Fetch a list of Yodlee providers';
 
     private $cachedFile = 'providers.cache.json';
 

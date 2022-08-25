@@ -31,6 +31,41 @@ YODLEE_API_KEY=
 YODLEE_USERNAME=
 ```
 
+## Commands
+
+List of Commands
+----------------
+
+Display API keys:
+
+```
+✗ php artisan yodlee:api-key
++-----------------------------------------------+-------------+
+| key                                           | createdDate |
++-----------------------------------------------+-------------+
+| 00000000-00000000-0000-0000-0000-000000000000 | 2021-05-06  |
++-----------------------------------------------+-------------+
+```
+
+Console Commands
+----------------
+
+The console commands contains a subset of the main API methods.
+
+```
+yodlee:accounts                       Fetch a list of Yodlee accounts
+yodlee:api-key                        Fetch a list of Yodlee API keys
+yodlee:delete-user                    Delete an existing Yodlee user
+yodlee:event-subscriptions            Fetch a list of subscribed notification events
+yodlee:get-user                       Fetch details about a Yodlee user
+yodlee:providers                      Fetch a list of Yodlee providers
+yodlee:provider-accounts              Fetch a list of Yodlee provider accounts
+yodlee:register-user                  Register a new Yodlee user
+yodlee:subscribe                      Subscribe to DATA_UPDATES event notifications
+yodlee:transactions                   Fetch a list of Yodlee transactions for a user
+yodlee:unsubscribe                    Unsubscribe from DATA_UPDATES event notifications
+```
+
 ## Testing
 
 Test examples:
@@ -45,10 +80,6 @@ vendor/bin/phpunit --filter it_can_generate_a_jwt_token tests/ApiTest.php
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
-
-## Common Development Errors
-
-Please see [ERRORS](ERRORS.md) for a list of commonly found errors whilst using the Yodlee API.
 
 ## Laravel Specific Config
 
@@ -71,9 +102,34 @@ The above example assumes you're using Expose. The start Expose with this URL wi
 
 `expose share --subdomain=my-app --server=eu-1 http://my-app.test`
 
-## License
+If you're testing with an existing project, then update composer.json in the existing project to require the file like so:
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+```
+"repositories": [
+        ...
+        ,
+        {
+            "type": "path",
+            "url": "../yodlee-api"
+        }
+    ],
+```
+
+Then update composer:
+
+```
+  composer require fintech-systems/yodlee-api:dev-main
+...
+  - Upgrading fintech-systems/yodlee-api (v0.0.17 => dev-main)
+...
+  - Removing fintech-systems/yodlee-api (v0.0.17)
+  - Installing fintech-systems/yodlee-api (dev-main): Symlinking from ../yodlee-api
+Generating optimized autoload files
+```
+
+## Common Development Errors
+
+Please see [ERRORS](ERRORS.md) for a list of commonly found errors whilst using the Yodlee API.
 
 ## .gitignore Security Notice
 
@@ -92,39 +148,6 @@ Additionally `*.json` ignores are there because the Api Helper has the ability t
 ```
 *.example.json
 *.cache.json
-```
-
-Commands
-========
-
-The Artisan commands has the ability to cache API requests by appending `--cached`. This is a security risk if your .gitignore is not set up correctly. Please see the section above `.gitignore Security Notice`
-
-List of Commands
-----------------
-
-Display all API keys:
-
-```
-✗ art yodlee:api-key
-+-----------------------------------------------+-------------+
-| key                                           | createdDate |
-+-----------------------------------------------+-------------+
-| 00000000-00000000-0000-0000-0000-000000000000 | 2021-05-06  |
-+-----------------------------------------------+-------------+
-```
-
-Provider Accounts
------------------
-
-```
-yodlee:accounts                       Retrieve a list of Yodlee accounts
-yodlee:api-key                        Retrieve a list of Yodlee API keys
-yodlee:delete-user                    Delete a Yodlee user
-yodlee:get-user                       Retrieve details about a Yodlee user
-yodlee:provider-accounts              Retrieve a list of Yodlee provider accounts
-yodlee:providers                      Retrieve a list of Yodlee providers
-yodlee:register-user                  Register a new Yodlee user
-yodlee:transactions                   Retrieve a list of Yodlee transactions for a user
 ```
 
 Testing Fastlink
@@ -190,6 +213,10 @@ To start off run initialize_app.php
 This will provide you with variables required for the test phases
 
 *NB* Save the output to a file for later use *NB*
+
+## License
+
+The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
 
 ## Need Help?
 
