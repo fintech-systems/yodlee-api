@@ -3,7 +3,6 @@
 namespace FintechSystems\YodleeApi;
 
 use Carbon\Carbon;
-use Exception;
 use FintechSystems\LaravelApiHelpers\Api;
 use FintechSystems\YodleeApi\Contracts\BankingProvider;
 use Firebase\JWT\JWT;
@@ -32,20 +31,20 @@ class YodleeApi implements BankingProvider
 
         $cwd = str_replace('/public', '', getcwd());
         $this->privateKey = file_get_contents(
-            $cwd . $this->privateKey
+            $cwd.$this->privateKey
         );
 
         $this->header = [
             'Api-Version' => '1.1',
             'Cobrand-Name' =>  $this->cobrandName,
-            'Authorization' => 'Bearer ' . $this->generateGenericJwtToken(),
+            'Authorization' => 'Bearer '.$this->generateGenericJwtToken(),
             'Content-Type' => 'application/json',
         ];
     }
 
     /**
-     * Build a get command
-     * 
+     * Build a get command.
+     *
      * When no username, build header using the default username as defined in the .env file
      */
     public function get($endpoint, $username = null)
@@ -58,13 +57,13 @@ class YodleeApi implements BankingProvider
 
         $header = [
             'Api-Version' => 1.1,
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer '.$token,
             'Cobrand-Name' => $this->cobrandName,
             'Content-Type' => 'application/json',
         ];
 
         return Http::withHeaders($header)->get(
-            $this->apiUrl . $endpoint,            
+            $this->apiUrl.$endpoint,
         );
     }
 
@@ -81,12 +80,12 @@ class YodleeApi implements BankingProvider
         $api = new Api();
 
         $response = $api->post(
-            $this->apiUrl . $endpoint,
+            $this->apiUrl.$endpoint,
             $data,
             [
                 'Api-Version: 1.1',
-                'Authorization: Bearer ' . $token,
-                'Cobrand-Name: ' . $this->cobrandName,
+                'Authorization: Bearer '.$token,
+                'Cobrand-Name: '.$this->cobrandName,
                 'Content-Type: application/json',
             ]
         );
@@ -110,19 +109,19 @@ class YodleeApi implements BankingProvider
         $postFields = '
         {
             "user": {
-              "loginName":"' . $loginName . '",              
-              "email": "' . $email . '",
+              "loginName":"'.$loginName.'",              
+              "email": "'.$email.'",
               "preferences": {                
-                "currency": "' . $currency . '",
-                "timeZone": "' . $timeZone . '",
-                "dateFormat": "' . $dateFormat . '",
-                "locale": "' . $locale . '"
+                "currency": "'.$currency.'",
+                "timeZone": "'.$timeZone.'",
+                "dateFormat": "'.$dateFormat.'",
+                "locale": "'.$locale.'"
               }              
             }
           }
         ';
 
-        $url = $this->apiUrl . 'user/register';
+        $url = $this->apiUrl.'user/register';
 
         return Http::withHeaders(
             $this->header
@@ -131,7 +130,7 @@ class YodleeApi implements BankingProvider
 
     /**
      * Delete a user (Yodlee consumer). This is also called unregister a user.
-     * 
+     *
      * Bearer is a JWT token of the user to be deleted
      *
      * On success this method returns an empty string but on the CURL request is generates a 204 (Success without content)
@@ -140,11 +139,11 @@ class YodleeApi implements BankingProvider
      */
     public function unregisterUser($user)
     {
-        $url = $this->apiUrl . 'user/unregister';
+        $url = $this->apiUrl.'user/unregister';
 
         $header = [
             'Api-Version' => '1.1',
-            'Authorization' => 'Bearer ' . $this->generateJwtToken($user),
+            'Authorization' => 'Bearer '.$this->generateJwtToken($user),
             'Cobrand-Name' => $this->cobrandName,
             'Content-Type' => 'application/json',
         ];
@@ -164,20 +163,20 @@ class YodleeApi implements BankingProvider
         if (env('YODLEE_EVENT_CALLBACK_URL')) {
             $callbackUrl = env('YODLEE_EVENT_CALLBACK_URL');
         } else {
-            $callbackUrl = config('app.url') . '/yodlee/event';
+            $callbackUrl = config('app.url').'/yodlee/event';
         }
-        
+
         $data = [
             'event' => [
-                'callbackUrl' => $callbackUrl
-            ]
+                'callbackUrl' => $callbackUrl,
+            ],
         ];
 
         // $data = '{ "event": {
         //             "callbackUrl":"' . $callbackUrl . '"
         //         }}';
 
-        $url = $this->apiUrl . "/configs/notifications/events/$eventName";
+        $url = $this->apiUrl."/configs/notifications/events/$eventName";
 
         return Http::withHeaders($this->header)
             ->post($url, $data);
@@ -194,18 +193,17 @@ class YodleeApi implements BankingProvider
     }
 
     /**
-     * deleteNotificationSubscription
-     * 
+     * deleteNotificationSubscription.
+     *
      * https://developer.yodlee.com/api-reference#tag/Configs/operation/deleteSubscribedNotificationEvent
      */
     public function deleteNotificationSubscription($eventName)
     {
-        $url = $this->apiUrl . "/configs/notifications/events/$eventName";
+        $url = $this->apiUrl."/configs/notifications/events/$eventName";
 
         return Http::withHeaders($this->header)
             ->delete($url);
     }
-
 
     /**
      * Get all accounts of a user held at the providers, i.e. all their bank accounts.
@@ -319,12 +317,12 @@ class YodleeApi implements BankingProvider
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => '{
-        		"publicKey": "' . $publicKey . '"
+        		"publicKey": "'.$publicKey.'"
   			}',
             CURLOPT_HTTPHEADER => [
                 'Api-Version: 1.1',
-                'Authorization: cobSession=' . $cobrandArray['cobSession'],
-                'Cobrand-Name: ' . $cobrandArray['cobrandName'],
+                'Authorization: cobSession='.$cobrandArray['cobSession'],
+                'Cobrand-Name: '.$cobrandArray['cobrandName'],
                 'Content-Type: application/json',
             ],
         ]);
@@ -340,7 +338,7 @@ class YodleeApi implements BankingProvider
     }
 
     /**
-     * Generate a JWT token for a user
+     * Generate a JWT token for a user.
      */
     public function generateJwtToken($user)
     {
@@ -353,7 +351,6 @@ class YodleeApi implements BankingProvider
 
         return JWT::encode($payload, $this->privateKey, 'RS512');
     }
-
 
     /**
      * Generic tokens are used for global API calls that does not pertain to a user.
@@ -391,8 +388,8 @@ class YodleeApi implements BankingProvider
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => '{
         		"cobrand":      {
-					"cobrandLogin": "' . $cobrandArray['cobrandLogin'] . '",
-					"cobrandPassword": "' . $cobrandArray['cobrandPassword'] . '"
+					"cobrandLogin": "'.$cobrandArray['cobrandLogin'].'",
+					"cobrandPassword": "'.$cobrandArray['cobrandPassword'].'"
          		}
     		}',
             CURLOPT_HTTPHEADER => [
