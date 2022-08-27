@@ -38,7 +38,7 @@ class DeleteUserCommand extends Command
      */
     public function handle()
     {
-        $result = YodleeApi::deleteUser(
+        $result = YodleeApi::unregisterUser(
             $this->argument('username')
         );
 
