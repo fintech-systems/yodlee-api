@@ -163,20 +163,20 @@ class ApiTest extends Setup
      */
     public function it_can_handle_an_incoming_user_data_update_event()
     {
-       //
+        //
     }
 
-    // 
+    //
 
     /**
-     * Data Extracts
-     * 
+     * Data Extracts.
+     *
      * https://developer.yodlee.com/api-reference#tag/DataExtracts
-     * 
+     *
      * @test
      */
     public function it_can_call_a_data_extracts_url_as_provided_by_subscription_event_notification()
     {
-       //
+        //
     }
 }
