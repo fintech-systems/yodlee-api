@@ -2,7 +2,7 @@
 
 All notable changes to `yodlee-php-api` will be documented in this file.
 
-## 0.0.21 - 2022-08-28
+## 0.0.22 - 2022-08-28
 
 - Additional refinement of register user command error checking
 
