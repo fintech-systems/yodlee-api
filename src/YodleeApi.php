@@ -67,30 +67,14 @@ class YodleeApi implements BankingProvider
         );
     }
 
-    public function apiPost($endpoint, $data)
-    {
-        $token = $this->generateJwtToken($this->username);
-
-        ray("Defaulting to stored username '$this->username' for post request")->orange();
-
-        ray("The endpoint for this post is $endpoint");
-
-        ray('The data is ', $data);
-
-        $api = new Api();
-
-        $response = $api->post(
-            $this->apiUrl.$endpoint,
-            $data,
-            [
-                'Api-Version: 1.1',
-                'Authorization: Bearer '.$token,
-                'Cobrand-Name: '.$this->cobrandName,
-                'Content-Type: application/json',
-            ]
-        );
-
-        return $response;
+    /**
+     * Call a data extracts url
+     * 
+     * https://developer.yodlee.com/api-reference#tag/DataExtracts
+     * https://developer.yodlee.com/docs/api/1.1/DataExtracts
+     */
+    public function dataExtracts($url) {
+        return $this->get($url);
     }
 
     /**

@@ -177,6 +177,12 @@ class ApiTest extends Setup
      */
     public function it_can_call_a_data_extracts_url_as_provided_by_subscription_event_notification()
     {
-        //
+        $url = "dataExtracts/userData?fromDate=2022-08-27T08:41:20Z&toDate=2022-08-27T08:56:20Z&loginName=1edaf370-52a6-4cd1-8c3d-2c36f7ae6932";
+
+        $yodlee = new YodleeApi($this->client());
+
+        $response = $yodlee->dataExtracts($url);
+
+        ray($response->json());
     }
 }
