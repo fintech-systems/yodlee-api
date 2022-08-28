@@ -93,8 +93,9 @@ class ApiTest extends Setup
     }
 
     /** @test */
-    public function registering_the_same_user_again_gives_a_sensible_message() {
-        $yodlee= new YodleeApi($this->client());
+    public function registering_the_same_user_again_gives_a_sensible_message()
+    {
+        $yodlee = new YodleeApi($this->client());
 
         $response = $yodlee->registerUser(
             'test-user',
