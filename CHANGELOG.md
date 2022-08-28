@@ -2,6 +2,10 @@
 
 All notable changes to `yodlee-php-api` will be documented in this file.
 
+## 0.0.21 - 2022-08-28
+
+- Register user command must decode json before checking for errors
+
 ## 0.0.20 - 2022-08-28
 
 - Added dataExtracts() method
