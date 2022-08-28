@@ -44,7 +44,7 @@ class RegisterUserCommand extends Command
             $this->argument('email')
         );
 
-        $result = json_decode($response);
+        $result = json_decode($response->body());
 
         // if (isset($result->errorCode)) {
         if (! isset($result->user->id)) {

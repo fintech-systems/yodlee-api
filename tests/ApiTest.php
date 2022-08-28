@@ -93,6 +93,21 @@ class ApiTest extends Setup
     }
 
     /** @test */
+    public function registering_the_same_user_again_gives_a_sensible_message() {
+        $yodlee= new YodleeApi($this->client());
+
+        $response = $yodlee->registerUser(
+            'test-user',
+            'test@example.com'
+        );
+
+        $this->assertFalse($response->successful());
+        $this->assertTrue($response->failed());
+        $this->assertArrayHasKey('errorMessage', $response->json());
+        $this->assertObjectHasAttribute('errorMessage', json_decode($response->body()));
+    }
+
+    /** @test */
     public function it_can_unregister_a_user()
     {
         $yodlee = new YodleeApi($this->client());
