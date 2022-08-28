@@ -159,16 +159,6 @@ class ApiTest extends Setup
     // }
 
     /**
-     * @test
-     */
-    public function it_can_handle_an_incoming_user_data_update_event()
-    {
-        //
-    }
-
-    //
-
-    /**
      * Data Extracts.
      *
      * https://developer.yodlee.com/api-reference#tag/DataExtracts
@@ -183,6 +173,7 @@ class ApiTest extends Setup
 
         $response = $yodlee->dataExtracts($url);
 
+        // TBA proper HTTP API testing
         ray($response->json());
     }
 }
