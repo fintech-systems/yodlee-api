@@ -68,12 +68,13 @@ class YodleeApi implements BankingProvider
     }
 
     /**
-     * Call a data extracts url
-     * 
+     * Call a data extracts url.
+     *
      * https://developer.yodlee.com/api-reference#tag/DataExtracts
      * https://developer.yodlee.com/docs/api/1.1/DataExtracts
      */
-    public function dataExtracts($url) {
+    public function dataExtracts($url)
+    {
         return $this->get($url);
     }
 
