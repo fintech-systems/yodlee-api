@@ -39,10 +39,12 @@ class RegisterUserCommand extends Command
      */
     public function handle()
     {
-        $result = YodleeApi::registerUser(
+        $response = YodleeApi::registerUser(
             $this->argument('username'),
             $this->argument('email')
         );
+
+        $result = json_decode($response);
 
         // if (isset($result->errorCode)) {
         if (! isset($result->user->id)) {
