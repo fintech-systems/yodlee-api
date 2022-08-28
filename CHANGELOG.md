@@ -2,6 +2,10 @@
 
 All notable changes to `yodlee-php-api` will be documented in this file.
 
+## 0.0.20 - 2022-08-28
+
+- Added dataExtracts() method
+
 ## 0.0.19 - 2022-08-27
 
 - Fix deleteUser commmand should be unregisterUser
