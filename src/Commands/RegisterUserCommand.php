@@ -50,7 +50,7 @@ class RegisterUserCommand extends Command
             Log::error($result);
 
             $this->error($result->errorMessage); // Output the error to the console
-            
+
             return -1;
         }
 
