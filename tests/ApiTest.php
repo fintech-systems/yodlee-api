@@ -2,9 +2,9 @@
 
 namespace FintechSystems\Api\Tests;
 
-use FintechSystems\YodleeApi\YodleeApi;
-use FintechSystems\YodleeApi\Tests\Setup;
 use FintechSystems\YodleeApi\Enums\SubscriptionNotificationEvent;
+use FintechSystems\YodleeApi\Tests\Setup;
+use FintechSystems\YodleeApi\YodleeApi;
 use Yodlee;
 
 class ApiTest extends Setup
@@ -59,7 +59,7 @@ class ApiTest extends Setup
             'cobrandPassword' => $client['cobrand_password'],
         ];
 
-        $loginUrl = $client['api_url'] . 'cobrand/login';
+        $loginUrl = $client['api_url'].'cobrand/login';
 
         $yodlee = new YodleeApi($client);
 
@@ -68,7 +68,7 @@ class ApiTest extends Setup
             $cobrandArray
         );
 
-        $apiKeyUrl = $client['api_url'] . 'auth/apiKey';
+        $apiKeyUrl = $client['api_url'].'auth/apiKey';
 
         $publicKey = file_get_contents('storage/public-key.pem');
 
@@ -222,24 +222,24 @@ class ApiTest extends Setup
 
         dd($response->headers()['Link'][0]);
 
-        $url = "";
+        $url = '';
     }
 
     /**
      * @test
      */
-    public function it_can_strip_the_next_transactions_url_for_only_whats_needed() {
-        $link = ": /transactions?fromDate=2022-03-08&skip=500&top=500;rel=next, /transactions/count?fromDate=2022-03-08;rel=count";
+    public function it_can_strip_the_next_transactions_url_for_only_whats_needed()
+    {
+        $link = ': /transactions?fromDate=2022-03-08&skip=500&top=500;rel=next, /transactions/count?fromDate=2022-03-08;rel=count';
 
         $actual = (new YodleeApi($this->client()))->getNextTransactionUrl($link);
 
-        $this->assertEquals("transactions?fromDate=2022-03-08&skip=500&top=500", $actual);
+        $this->assertEquals('transactions?fromDate=2022-03-08&skip=500&top=500', $actual);
 
-        $link = ": /transactions?fromDate=2022-03-08&top=500;rel=previous, /transactions?fromDate=2022-03-08&skip=1000&top=500;rel=next, /transactions/count?fromDate=2022-03-08;rel=count";
+        $link = ': /transactions?fromDate=2022-03-08&top=500;rel=previous, /transactions?fromDate=2022-03-08&skip=1000&top=500;rel=next, /transactions/count?fromDate=2022-03-08;rel=count';
 
         $actual = (new YodleeApi($this->client()))->getNextTransactionUrl($link);
 
-        $this->assertEquals("transactions?fromDate=2022-03-08&skip=1000&top=500", $actual);
-
+        $this->assertEquals('transactions?fromDate=2022-03-08&skip=1000&top=500', $actual);
     }
 }

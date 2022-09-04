@@ -31,13 +31,13 @@ class YodleeApi implements BankingProvider
 
         $cwd = str_replace('/public', '', getcwd());
         $this->privateKey = file_get_contents(
-            $cwd . $this->privateKey
+            $cwd.$this->privateKey
         );
 
         $this->header = [
             'Api-Version' => '1.1',
             'Cobrand-Name' =>  $this->cobrandName,
-            'Authorization' => 'Bearer ' . $this->generateGenericJwtToken(),
+            'Authorization' => 'Bearer '.$this->generateGenericJwtToken(),
             'Content-Type' => 'application/json',
         ];
     }
@@ -57,13 +57,13 @@ class YodleeApi implements BankingProvider
 
         $header = [
             'Api-Version' => 1.1,
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer '.$token,
             'Cobrand-Name' => $this->cobrandName,
             'Content-Type' => 'application/json',
         ];
 
         return Http::withHeaders($header)->get(
-            $this->apiUrl . $endpoint,
+            $this->apiUrl.$endpoint,
         );
     }
 
@@ -94,19 +94,19 @@ class YodleeApi implements BankingProvider
         $postFields = '
         {
             "user": {
-              "loginName":"' . $loginName . '",              
-              "email": "' . $email . '",
+              "loginName":"'.$loginName.'",              
+              "email": "'.$email.'",
               "preferences": {                
-                "currency": "' . $currency . '",
-                "timeZone": "' . $timeZone . '",
-                "dateFormat": "' . $dateFormat . '",
-                "locale": "' . $locale . '"
+                "currency": "'.$currency.'",
+                "timeZone": "'.$timeZone.'",
+                "dateFormat": "'.$dateFormat.'",
+                "locale": "'.$locale.'"
               }              
             }
           }
         ';
 
-        $url = $this->apiUrl . 'user/register';
+        $url = $this->apiUrl.'user/register';
 
         return Http::withHeaders(
             $this->header
@@ -124,11 +124,11 @@ class YodleeApi implements BankingProvider
      */
     public function unregisterUser($user)
     {
-        $url = $this->apiUrl . 'user/unregister';
+        $url = $this->apiUrl.'user/unregister';
 
         $header = [
             'Api-Version' => '1.1',
-            'Authorization' => 'Bearer ' . $this->generateJwtToken($user),
+            'Authorization' => 'Bearer '.$this->generateJwtToken($user),
             'Cobrand-Name' => $this->cobrandName,
             'Content-Type' => 'application/json',
         ];
@@ -148,7 +148,7 @@ class YodleeApi implements BankingProvider
         if (env('YODLEE_EVENT_CALLBACK_URL')) {
             $callbackUrl = env('YODLEE_EVENT_CALLBACK_URL');
         } else {
-            $callbackUrl = config('app.url') . '/yodlee/event';
+            $callbackUrl = config('app.url').'/yodlee/event';
         }
 
         $data = [
@@ -161,7 +161,7 @@ class YodleeApi implements BankingProvider
         //             "callbackUrl":"' . $callbackUrl . '"
         //         }}';
 
-        $url = $this->apiUrl . "/configs/notifications/events/$eventName";
+        $url = $this->apiUrl."/configs/notifications/events/$eventName";
 
         return Http::withHeaders($this->header)
             ->post($url, $data);
@@ -184,7 +184,7 @@ class YodleeApi implements BankingProvider
      */
     public function deleteNotificationSubscription($eventName)
     {
-        $url = $this->apiUrl . "/configs/notifications/events/$eventName";
+        $url = $this->apiUrl."/configs/notifications/events/$eventName";
 
         return Http::withHeaders($this->header)
             ->delete($url);
@@ -302,12 +302,12 @@ class YodleeApi implements BankingProvider
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => '{
-        		"publicKey": "' . $publicKey . '"
+        		"publicKey": "'.$publicKey.'"
   			}',
             CURLOPT_HTTPHEADER => [
                 'Api-Version: 1.1',
-                'Authorization: cobSession=' . $cobrandArray['cobSession'],
-                'Cobrand-Name: ' . $cobrandArray['cobrandName'],
+                'Authorization: cobSession='.$cobrandArray['cobSession'],
+                'Cobrand-Name: '.$cobrandArray['cobrandName'],
                 'Content-Type: application/json',
             ],
         ]);
@@ -373,13 +373,13 @@ class YodleeApi implements BankingProvider
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => '{
         		"cobrand":      {
-					"cobrandLogin": "' . $cobrandArray['cobrandLogin'] . '",
-					"cobrandPassword": "' . $cobrandArray['cobrandPassword'] . '"
+					"cobrandLogin": "'.$cobrandArray['cobrandLogin'].'",
+					"cobrandPassword": "'.$cobrandArray['cobrandPassword'].'"
          		}
     		}',
             CURLOPT_HTTPHEADER => [
                 'Api-Version: 1.1',
-                'Cobrand-Name: ' . $cobrandArray['cobrandName'],
+                'Cobrand-Name: '.$cobrandArray['cobrandName'],
                 'Content-Type: application/json',
                 'Cookie: JSESSIONID=xxx', // REDACTED TODO Research
             ],
@@ -399,15 +399,16 @@ class YodleeApi implements BankingProvider
      * the first part has next, and count, and the second part will have previous, next and count.
      * This method strips all unused characters and returns only the relevant part of the URL.
      */
-    public function getNextTransactionUrl($link, $rel = 'next') {
-        $link = str_replace(": ", "", $link);
-        
-        $link = str_replace("/", "", $link);
+    public function getNextTransactionUrl($link, $rel = 'next')
+    {
+        $link = str_replace(': ', '', $link);
+
+        $link = str_replace('/', '', $link);
 
         $parts = explode(',', $link);
 
         foreach ($parts as $part) {
-            $subPart = explode(";",  $part);
+            $subPart = explode(';', $part);
 
             if ($subPart[1] == "rel=$rel") {
                 return trim($subPart[0]);
@@ -416,5 +417,4 @@ class YodleeApi implements BankingProvider
 
         return null;
     }
-
 }
