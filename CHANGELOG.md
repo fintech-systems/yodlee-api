@@ -2,6 +2,10 @@
 
 All notable changes to `yodlee-php-api` will be documented in this file.
 
+## 0.0.24 - 2022-09-16
+
+- Added deleteAccount & deleteProviderAccount API calls
+
 ## 0.0.23 - 2022-09-04
 
 - New method getNextTransactionUrl

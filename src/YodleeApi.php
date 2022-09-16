@@ -176,7 +176,7 @@ class YodleeApi implements BankingProvider
     {
         return $this->get('/configs/notifications/events');
     }
-
+    
     /**
      * deleteNotificationSubscription.
      *
@@ -198,6 +198,19 @@ class YodleeApi implements BankingProvider
     public function getAccounts($user = null)
     {
         return $this->get('accounts', $user);
+    }
+
+    /**
+     * deleteAccount
+     *
+     * https://developer.yodlee.com/api-reference/aggregation#tag/Accounts/operation/deleteAccount
+     */
+    public function deleteAccount($accountId)
+    {
+        $url = $this->apiUrl."/accounts/$accountId";
+
+        return Http::withHeaders($this->header)
+            ->delete($url);
     }
 
     /**
@@ -236,6 +249,19 @@ class YodleeApi implements BankingProvider
     public function getProviderAccounts($username)
     {
         return $this->get('providerAccounts', $username);
+    }
+
+    /**
+     * deleteProviderAccount
+     *
+     * https://developer.yodlee.com/api-reference/aggregation#tag/ProviderAccounts/operation/deleteProviderAccount
+     */
+    public function deleteProviderAccount($providerAccountId)
+    {
+        $url = $this->apiUrl."/providerAccounts/$providerAccountId";
+
+        return Http::withHeaders($this->header)
+            ->delete($url);
     }
 
     /**
