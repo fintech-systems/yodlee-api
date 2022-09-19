@@ -34,7 +34,7 @@ class YodleeApi implements BankingProvider
         $cwd = str_replace('/public', '', getcwd());
 
         $this->privateKey = file_get_contents(
-            $cwd . $this->privateKey
+            $cwd.$this->privateKey
         );
 
         ray($this->privateKey);
@@ -45,8 +45,8 @@ class YodleeApi implements BankingProvider
 
         $this->header = [
             'Api-Version' => 1.1,
-            'Authorization' => 'Bearer ' . $token,
-            'Cobrand-Name' =>  $this->cobrandName,            
+            'Authorization' => 'Bearer '.$token,
+            'Cobrand-Name' =>  $this->cobrandName,
             'Content-Type' => 'application/json',
         ];
     }
@@ -66,13 +66,13 @@ class YodleeApi implements BankingProvider
 
         $header = [
             'Api-Version' => 1.1,
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer '.$token,
             'Cobrand-Name' => $this->cobrandName,
             'Content-Type' => 'application/json',
         ];
 
         return Http::withHeaders($header)->get(
-            $this->apiUrl . $endpoint,
+            $this->apiUrl.$endpoint,
         );
     }
 
@@ -103,19 +103,19 @@ class YodleeApi implements BankingProvider
         $postFields = '
         {
             "user": {
-              "loginName":"' . $loginName . '",              
-              "email": "' . $email . '",
+              "loginName":"'.$loginName.'",              
+              "email": "'.$email.'",
               "preferences": {                
-                "currency": "' . $currency . '",
-                "timeZone": "' . $timeZone . '",
-                "dateFormat": "' . $dateFormat . '",
-                "locale": "' . $locale . '"
+                "currency": "'.$currency.'",
+                "timeZone": "'.$timeZone.'",
+                "dateFormat": "'.$dateFormat.'",
+                "locale": "'.$locale.'"
               }              
             }
           }
         ';
 
-        $url = $this->apiUrl . 'user/register';
+        $url = $this->apiUrl.'user/register';
 
         return Http::withHeaders(
             $this->header
@@ -133,11 +133,11 @@ class YodleeApi implements BankingProvider
      */
     public function unregisterUser($user)
     {
-        $url = $this->apiUrl . 'user/unregister';
+        $url = $this->apiUrl.'user/unregister';
 
         $header = [
             'Api-Version' => '1.1',
-            'Authorization' => 'Bearer ' . $this->generateJwtToken($user),
+            'Authorization' => 'Bearer '.$this->generateJwtToken($user),
             'Cobrand-Name' => $this->cobrandName,
             'Content-Type' => 'application/json',
         ];
@@ -157,7 +157,7 @@ class YodleeApi implements BankingProvider
         if (env('YODLEE_EVENT_CALLBACK_URL')) {
             $callbackUrl = env('YODLEE_EVENT_CALLBACK_URL');
         } else {
-            $callbackUrl = config('app.url') . '/yodlee/event';
+            $callbackUrl = config('app.url').'/yodlee/event';
         }
 
         $data = [
@@ -170,7 +170,7 @@ class YodleeApi implements BankingProvider
         //             "callbackUrl":"' . $callbackUrl . '"
         //         }}';
 
-        $url = $this->apiUrl . "/configs/notifications/events/$eventName";
+        $url = $this->apiUrl."/configs/notifications/events/$eventName";
 
         return Http::withHeaders($this->header)
             ->post($url, $data);
@@ -193,7 +193,7 @@ class YodleeApi implements BankingProvider
      */
     public function deleteNotificationSubscription($eventName)
     {
-        $url = $this->apiUrl . "/configs/notifications/events/$eventName";
+        $url = $this->apiUrl."/configs/notifications/events/$eventName";
 
         return Http::withHeaders($this->header)
             ->delete($url);
@@ -210,21 +210,21 @@ class YodleeApi implements BankingProvider
     }
 
     /**
-     * Delete account
-     * 
+     * Delete account.
+     *
      * When deleting an account the Http client header must include a JWT token based on username
      *
-     * https://developer.yodlee.com/api-reference/aggregation#tag/Accounts/operation/deleteAccount    
+     * https://developer.yodlee.com/api-reference/aggregation#tag/Accounts/operation/deleteAccount
      */
     public function deleteAccount($username, $accountId)
     {
-        $url = $this->apiUrl . "/accounts/$accountId";
+        $url = $this->apiUrl."/accounts/$accountId";
 
-        $token = $this->generateJwtToken($username);        
+        $token = $this->generateJwtToken($username);
 
         $header = [
             'Api-Version' => 1.1,
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer '.$token,
             'Cobrand-Name' => $this->cobrandName,
             'Content-Type' => 'application/json',
         ];
@@ -278,7 +278,7 @@ class YodleeApi implements BankingProvider
      */
     public function deleteProviderAccount($providerAccountId)
     {
-        $url = $this->apiUrl . "/providerAccounts/$providerAccountId";
+        $url = $this->apiUrl."/providerAccounts/$providerAccountId";
 
         return Http::withHeaders($this->header)
             ->delete($url);
@@ -348,12 +348,12 @@ class YodleeApi implements BankingProvider
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => '{
-        		"publicKey": "' . $publicKey . '"
+        		"publicKey": "'.$publicKey.'"
   			}',
             CURLOPT_HTTPHEADER => [
                 'Api-Version: 1.1',
-                'Authorization: cobSession=' . $cobrandArray['cobSession'],
-                'Cobrand-Name: ' . $cobrandArray['cobrandName'],
+                'Authorization: cobSession='.$cobrandArray['cobSession'],
+                'Cobrand-Name: '.$cobrandArray['cobrandName'],
                 'Content-Type: application/json',
             ],
         ]);
@@ -419,13 +419,13 @@ class YodleeApi implements BankingProvider
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => '{
         		"cobrand":      {
-					"cobrandLogin": "' . $cobrandArray['cobrandLogin'] . '",
-					"cobrandPassword": "' . $cobrandArray['cobrandPassword'] . '"
+					"cobrandLogin": "'.$cobrandArray['cobrandLogin'].'",
+					"cobrandPassword": "'.$cobrandArray['cobrandPassword'].'"
          		}
     		}',
             CURLOPT_HTTPHEADER => [
                 'Api-Version: 1.1',
-                'Cobrand-Name: ' . $cobrandArray['cobrandName'],
+                'Cobrand-Name: '.$cobrandArray['cobrandName'],
                 'Content-Type: application/json',
                 'Cookie: JSESSIONID=xxx', // REDACTED TODO Research
             ],

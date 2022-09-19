@@ -246,15 +246,16 @@ class ApiTest extends Setup
     /**
      * @test
      */
-    public function it_can_delete_an_account() {                
-        $username =  'ebdd51a4';
+    public function it_can_delete_an_account()
+    {
+        $username = 'ebdd51a4';
 
         $accountId = '10123816';
 
         $yodlee = new YodleeApi($this->client());
-        
+
         $response = $yodlee->deleteAccount($username, $accountId);
-        
+
         $this->assertEquals(204, $response->status());
     }
 }
