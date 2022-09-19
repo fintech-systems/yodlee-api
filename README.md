@@ -129,98 +129,19 @@ Then update composer:
 Generating optimized autoload files
 ```
 
-## Common Development Errors
-
-Please see [ERRORS](ERRORS.md) for a list of commonly found errors whilst using the Yodlee API.
-
-## .gitignore Security Notice
-
-Storing private or public keys in a source code repository is a massive security risk.
-
-The `.gitignore` file supplied with this repository contains the following:
-
-```
-/storage/*.pem
-```
-
-Under no circumstances upload your keys to a public (or private) repo.
-
-Additionally `*.json` ignores are there because the Api Helper has the ability to cache output and those files should also be ignored.
-
-```
-*.example.json
-*.cache.json
-```
-
-Testing Fastlink
-----------------
-Use these credentials to test Fastlink:
-
-Username (case-sensitive): DAGtest.site16441.1
-Password: site16441.1
-
-How Yodlee Works (high level overview)
---------------------------------------
-https://av.developer.yodlee.com/
-
-A video:
-
-https://developer.yodlee.com/vqs
-
-Registering a user
-------------------
-https://av.developer.yodlee.com/#c8fbfce3-bc51-4aeb-a795-301086b918d4
-
-First Steps
------------
-You need "/fastlink.php" to set up the link with the bank.
-
-Workflow
---------
-
-This is a basic overview of all the various security layers and workflow before provider data retrieval:
-
-- First log in using the cobrand details. This is cobrand_name, cobrand_login, and cobrand_password
-  - These credentials are stored in the .env file
-
-- Then you create cobrand session
-
-- Then you create an API key in the cobrand session & also crease private key and public key using PHP security libraries included
-
-- Then with the API you can create a JWT token - Yodlees supplies a PHP script where you pass API key and private key and then it happens
-
-- Then with the JWT token;
-
-- Then register user call user xyz API call user register - using POSTMAN once you have a user
-
-- Then put all parameters which is the API key and private key
-
-- Put that into sample app
-
-- Type in Username xyz into, clicked go
-
-- Then went into Fastlink - a modal popped up
-
-- In Fastlink modal, there was no accounts
-
-- Then clicked linked Account
-
-- Then choose A provider's name, log in, click link.
-
-Instructions
-------------
-
-To start off run initialize_app.php
-
-This will provide you with variables required for the test phases
-
-*NB* Save the output to a file for later use *NB*
-
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
 
 ## Need Help?
+
+### Yodlee ERD
+
+To get a high level overview of Yodlee's data structure, see here:
+
+https://developer.yodlee.com/docs/api/1.1/Data_Model
+
+### Yodlee API Reference
 
 The Yodlee Developer's API Reference can be found here:
 
