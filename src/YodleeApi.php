@@ -28,21 +28,15 @@ class YodleeApi implements BankingProvider
         $this->apiUrl = $client['api_url'];
         $this->apiKey = $client['api_key'];
         $this->username = $client['username'];
-
-        ray($this->username);
-
+        
         $cwd = str_replace('/public', '', getcwd());
 
         $this->privateKey = file_get_contents(
             $cwd . $this->privateKey
         );
-
-        ray($this->privateKey);
-
+        
         $token = $this->generateGenericJwtToken();
-
-        ray($token);
-
+        
         $this->header = [
             'Api-Version' => 1.1,
             'Authorization' => 'Bearer ' . $token,
