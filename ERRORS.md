@@ -43,11 +43,13 @@ Yodlee get endpoint: https://stage.api.yodlee.uk/ysl/accounts
 
 401	Y020	Invalid token in Authorization header	The Authorization token is invalid. Create a new valid Access Token.
 
-Where encountered
+Where encountered:
 
 After a long time using an application on local, running art yodlee:get-accounts first didn't have the right API key and thereafter it wasn't liking the JWT token # yodlee-api
 
 Be mindful of `Invalid token in authorization header` because it could indicate a generic problem with your user accessing the API, e.g. when they have been deleted.
+
+Another place where this was encountered was with the deleteAccount command. It appears this command doesn't work with the default header so the username had to be input to the function.
 
 ---
 

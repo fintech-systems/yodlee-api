@@ -2,6 +2,10 @@
 
 All notable changes to `yodlee-php-api` will be documented in this file.
 
+## 0.0.25 - 2022-09-19
+
+- Fixed deletedAccount, a JWT token needs to be generated before invoking DELETE
+
 ## 0.0.24 - 2022-09-16
 
 - Added deleteAccount & deleteProviderAccount API calls

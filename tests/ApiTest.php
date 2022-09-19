@@ -242,4 +242,19 @@ class ApiTest extends Setup
 
         $this->assertEquals('transactions?fromDate=2022-03-08&skip=1000&top=500', $actual);
     }
+
+    /**
+     * @test
+     */
+    public function it_can_delete_an_account() {                
+        $username =  'ebdd51a4';
+
+        $accountId = '10123816';
+
+        $yodlee = new YodleeApi($this->client());
+        
+        $response = $yodlee->deleteAccount($username, $accountId);
+        
+        $this->assertEquals(204, $response->status());
+    }
 }
