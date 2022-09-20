@@ -2,6 +2,10 @@
 
 All notable changes to `yodlee-php-api` will be documented in this file.
 
+## 0.0.26 - 2022-09-19
+
+- Fix delete user check for 204 and return 0 otherwise return 1
+
 ## 0.0.25 - 2022-09-19
 
 - Fixed deletedAccount, a JWT token needs to be generated before invoking DELETE

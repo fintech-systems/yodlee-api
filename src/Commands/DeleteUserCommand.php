@@ -32,16 +32,23 @@ class DeleteUserCommand extends Command
     }
 
     /**
-     * Execute the console command.
-     *
+     * Execute the console command. Return 
+     * 0 if the result was a HTTP 204
+     * code, otherwise return 1. 
+     * 
      * @return int
      */
     public function handle()
     {
-        $result = YodleeApi::unregisterUser(
+        $response = YodleeApi::unregisterUser(
             $this->argument('username')
         );
 
-        return $result;
+        if ($response->status() == 204) {
+            return 0;
+        }
+
+        // https://shapeshed.com/unix-exit-codes/
+        return 1;
     }
 }

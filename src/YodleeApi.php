@@ -123,7 +123,7 @@ class YodleeApi implements BankingProvider
      *
      * On success this method returns an empty string but on the CURL request is generates a 204 (Success without content)
      *
-     * https://developer.yodlee.com/api-reference/aggregation#tag/User/operation/userLogout
+     * https://developer.yodlee.com/api-reference/aggregation#tag/User/operation/unregister
      */
     public function unregisterUser($user)
     {
