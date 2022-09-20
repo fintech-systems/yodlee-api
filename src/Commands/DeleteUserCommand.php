@@ -32,10 +32,10 @@ class DeleteUserCommand extends Command
     }
 
     /**
-     * Execute the console command. Return 
+     * Execute the console command. Return
      * 0 if the result was a HTTP 204
-     * code, otherwise return 1. 
-     * 
+     * code, otherwise return 1.
+     *
      * @return int
      */
     public function handle()
