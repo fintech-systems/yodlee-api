@@ -40,6 +40,10 @@ class EventSubscriptionsCommand extends Command
     {
         $response = YodleeApi::getSubscribedNotificationEvents();
 
-        return $response->json()['event'];
+        $event = $response->json()['event'];
+
+        ray($event);
+
+        return $event;
     }
 }

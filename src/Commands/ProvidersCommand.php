@@ -50,8 +50,15 @@ class ProvidersCommand extends Command
             return file_get_contents($this->cachedFile);
         }
 
+        $providers = YodleeApi::getProviders();
+
+        ray($providers->json());
+
+        $count = count($providers->json()['provider']);
+
         $result = file_put_contents($this->cachedFile, YodleeApi::getProviders());
-        $this->info('The command was successful!');
+
+        $this->info("$count providers were retrieved.");
 
         return $result;
     }

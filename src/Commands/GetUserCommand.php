@@ -46,9 +46,16 @@ class GetUserCommand extends LaravelApiHelpersCommand
             return $file;
         }
 
+        $this->info('Fetching user details from Yodlee');
+
+        $user = YodleeApi::getUser($this->argument('username'));
+        ray($user->json());
+
         $result = file_put_contents($this->cachedFile, YodleeApi::getUser(
             $this->argument('username')
         ));
+
+        $this->info("Got " . $user->json()['user']['email']);
 
         return $result;
     }

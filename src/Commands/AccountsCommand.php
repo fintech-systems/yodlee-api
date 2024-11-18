@@ -51,6 +51,8 @@ class AccountsCommand extends LaravelApiHelpersCommand
             $this->argument('username')
         ));
 
+        ray($result);
+
         $this->info('The API command was successful');
 
         return $result;

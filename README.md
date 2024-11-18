@@ -66,6 +66,22 @@ yodlee:transactions                   Fetch a list of Yodlee transactions for a 
 yodlee:unsubscribe                    Unsubscribe from DATA_UPDATES event notifications
 ```
 
+## Errors
+
+### Retrieving a user
+
+#### Token issues
+
+```
+{
+    "errorCode": "Y008",
+    "errorMessage": "Invalid token in authorization header",
+    "referenceCode": "c1b1b1b1-1b1b-1b1b-1b1b-1b1b1b1b1b1b"
+}
+```
+
+Check that you have the correct username as specified user `YODLEE_USERNAME` in your `.env` file.
+
 ## Testing
 
 Test examples:

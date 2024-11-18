@@ -1,6 +1,7 @@
 {
     "name": "fintech-systems/yodlee-api",
     "require": {
+        "php": "^8.3",
         "phpseclib/phpseclib": "^3.0.10",
         "firebase/php-jwt": "^5.0",        
         "vlucas/phpdotenv": "^5.3",

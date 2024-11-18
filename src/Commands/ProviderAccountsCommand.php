@@ -50,6 +50,10 @@ class ProviderAccountsCommand extends Command
             return file_get_contents($this->cachedFile);
         }
 
+        $providerAccounts = YodleeApi::getProviderAccounts($this->argument('username'));
+
+        ray($providerAccounts->json());
+
         $result = file_put_contents($this->cachedFile, YodleeApi::getProviderAccounts(
             $this->argument('username')
         ));
