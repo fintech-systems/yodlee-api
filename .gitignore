@@ -14,3 +14,4 @@ yarn-error.log
 *.example.json
 *.cache.json
 
+/.idea/
